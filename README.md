@@ -11,6 +11,8 @@ WebAssembly bits processing utilities
 npm i @hazae41/naberius
 ```
 
+[**Node Package 📦**](https://www.npmjs.com/package/@hazae41/naberius)
+
 ## Features
 - unpack: transform an array of bytes to an array of bits (aka bitfield)
 - pack_left: transform an array of bits to a left-padded array of bytes
