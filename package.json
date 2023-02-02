@@ -1,0 +1,65 @@
+{
+  "type": "module",
+  "name": "@hazae41/morax",
+  "version": "1.0.17",
+  "description": "WebAssembly port of RustCrypto's SHA1, a Rust implementation of SHA-1 hashing.",
+  "homepage": "https://github.com/hazae41/morax",
+  "repository": "github:hazae41/morax",
+  "author": "hazae41",
+  "license": "Unlicense",
+  "main": "./dist/cjs/src/node/index.cjs",
+  "module": "./dist/esm/src/node/index.mjs",
+  "types": "./dist/types/src/node/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "./dist/esm",
+    "./dist/cjs",
+    "./dist/types"
+  ],
+  "scripts": {
+    "build:wasm": "cd wasm && rimraf pkg && wasm-pack build --target web --release",
+    "build:dist": "rimraf dist && node build.js && rollup -c",
+    "build": "npm run build:wasm && npm run build:dist",
+    "test:node": "node ./dist/test/src/node/index.test.mjs",
+    "test:deno": "deno run -A --unstable ./src/deno/mod.test.ts",
+    "test": "npm run test:node && npm run test:deno",
+    "bench:node": "node ./dist/bench/src/node/index.bench.mjs",
+    "example:deno": "deno run ./example/deno/mod.ts",
+    "example:node": "cd ./example/node && npm ci && node ./index.js",
+    "prepare": "npm run build:dist"
+  },
+  "devDependencies": {
+    "@hazae41/binary": "^1.1.8",
+    "@hazae41/deimos": "^1.0.3",
+    "@hazae41/phobos": "^1.0.10",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "@types/node": "^18.11.18",
+    "rimraf": "^4.1.1",
+    "rollup": "^3.10.0",
+    "rollup-plugin-dts": "^5.1.1",
+    "rollup-plugin-node-externals": "^5.1.0",
+    "typescript": "^4.9.4"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/types/src/node/index.d.ts",
+      "import": "./dist/esm/src/node/index.mjs",
+      "require": "./dist/cjs/src/node/index.cjs"
+    }
+  },
+  "keywords": [
+    "reproducible",
+    "webassembly",
+    "cryptography",
+    "incremental",
+    "hash",
+    "hashing",
+    "sha1",
+    "sha-1",
+    "browser",
+    "typescript",
+    "rust",
+    "unit-tested",
+    "deno"
+  ]
+}

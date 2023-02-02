@@ -1,0 +1,22 @@
+{
+  "name": "pack",
+  "collaborators": [
+    "hazae41 <hazae41@proton.me>"
+  ],
+  "description": "WebAssembly bits <=> bytes conversion.",
+  "version": "1.0.0",
+  "license": "Unlicense",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hazae41/pack-wasm"
+  },
+  "files": [
+    "pack_bg.wasm",
+    "pack.js",
+    "pack.d.ts",
+    "LICENSE.md"
+  ],
+  "module": "pack.js",
+  "types": "pack.d.ts",
+  "sideEffects": false
+}
