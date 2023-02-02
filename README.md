@@ -1,4 +1,7 @@
-<img align="right" width="128" src="[https://user-images.githubusercontent.com/4405263/216390844-c1f2b1ba-6ebe-4af9-97ac-41358cc76576.png](https://user-images.githubusercontent.com/4405263/216392129-a6a0f9df-1131-4b47-af3f-b09eebeacfea.png)"/>
+<div>
+  <img align="right" width="128" src="https://user-images.githubusercontent.com/4405263/216392312-16db6e26-5d1b-4c2d-899e-08b4093f64d3.png"/>
+  <p></p>
+</div>
 
 # Naberius
 
