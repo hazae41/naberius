@@ -15,7 +15,7 @@ pub unsafe fn pack_right_unsafe(bits: &[u8], bytes: &mut [u8]) {
         let mut b = 0;
         k = 0;
         while k < 8 {
-            b = b << 1 | bits.get_unchecked(j);
+            b = (b << 1) | bits.get_unchecked(j);
             j = j.unchecked_add(1);
             k = k.unchecked_add(1);
         }
@@ -27,12 +27,12 @@ pub unsafe fn pack_right_unsafe(bits: &[u8], bytes: &mut [u8]) {
         let mut b = 0;
         k = 0;
         while k < r {
-            b = b << 1 | bits.get_unchecked(j);
+            b = (b << 1) | bits.get_unchecked(j);
             j = j.unchecked_add(1);
             k = k.unchecked_add(1);
         }
         while k < 8 {
-            b = b << 1 | 0;
+            b = (b << 1) | 0;
             k = k.unchecked_add(1);
         }
         *bytes.get_unchecked_mut(i) = b;
@@ -59,7 +59,7 @@ pub unsafe fn pack_left_unsafe(bits: &[u8], bytes: &mut [u8]) {
     while j < bits.len() {
         let mut b = 0;
         for _ in 0..8 {
-            b = b << 1 | bits.get_unchecked(j);
+            b = (b << 1) | bits.get_unchecked(j);
             j = j.unchecked_add(1);
         }
         *bytes.get_unchecked_mut(i) = b;

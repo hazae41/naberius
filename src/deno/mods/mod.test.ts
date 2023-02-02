@@ -54,6 +54,8 @@ test("Unpack and pack", async () => {
   const unpacked = unpack(packed)
 
   const first = unpacked.subarray(2, 2 + 3)
-  const firstb = new DataView(pack_left(first))
+  const firstb = new DataView(pack_left(first).buffer)
   const firstn = firstb.getUint8(0)
+
+  assert(firstn === 7)
 })

@@ -1,7 +1,7 @@
-export * from "../../../wasm/pkg/pack.js";
+export * from "../../../wasm/pkg/packer.js";
 
-import { init, InitOutput, initSync, pack_left_unsafe, pack_right_unsafe, unpack_unsafe } from "../../../wasm/pkg/pack.js";
-import { wasm } from "../../../wasm/pkg/pack.wasm.js";
+import { init, InitOutput, initSync, pack_left_unsafe, pack_right_unsafe, unpack_unsafe } from "../../../wasm/pkg/packer.js";
+import { wasm } from "../../../wasm/pkg/packer.wasm.js";
 
 let output: InitOutput | undefined = undefined
 

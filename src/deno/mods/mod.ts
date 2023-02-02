@@ -1,12 +1,12 @@
-export * from "../../../wasm/pkg/pack.js";
+export * from "../../../wasm/pkg/packer.js";
 
 import * as Base64 from "https://deno.land/std@0.158.0/encoding/base64.ts";
 
-// @deno-types="../../../wasm/pkg/pack.d.ts"
-import { init, initSync, pack_left_unsafe, pack_right_unsafe, unpack_unsafe } from "../../../wasm/pkg/pack.js";
+// @deno-types="../../../wasm/pkg/packer.d.ts"
+import { init, initSync, pack_left_unsafe, pack_right_unsafe, unpack_unsafe } from "../../../wasm/pkg/packer.js";
 
-import { InitOutput } from "../../../wasm/pkg/pack.d.ts";
-import { wasm } from "../../../wasm/pkg/pack.wasm.js";
+import { InitOutput } from "../../../wasm/pkg/packer.d.ts";
+import { wasm } from "../../../wasm/pkg/packer.wasm.js";
 
 let output: InitOutput | undefined = undefined
 

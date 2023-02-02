@@ -1,5 +1,5 @@
 {
-  "name": "pack",
+  "name": "packer",
   "collaborators": [
     "hazae41 <hazae41@proton.me>"
   ],
@@ -8,15 +8,15 @@
   "license": "Unlicense",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hazae41/pack-wasm"
+    "url": "https://github.com/hazae41/packer-wasm"
   },
   "files": [
-    "pack_bg.wasm",
-    "pack.js",
-    "pack.d.ts",
+    "packer_bg.wasm",
+    "packer.js",
+    "packer.d.ts",
     "LICENSE.md"
   ],
-  "module": "pack.js",
-  "types": "pack.d.ts",
+  "module": "packer.js",
+  "types": "packer.d.ts",
   "sideEffects": false
 }

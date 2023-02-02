@@ -1,4 +1,3 @@
-import { Binary } from "@hazae41/binary";
 import { assert, test } from "@hazae41/phobos";
 import { relative, resolve } from "path";
 import { initBundledOnce, pack_left, pack_right, unpack } from "./index.js";
@@ -43,8 +42,6 @@ test("Ambiguous", async ({ test }) => {
     0, 0, 0, 1,
   ])
 
-  console.log(pack_left(ambiguous))
-  console.log(unpack(pack_right(ambiguous)))
   assert(equals(unpack(pack_right(ambiguous)), unambiguous_right), `pack_right`)
   assert(equals(unpack(pack_left(ambiguous)), unambiguous_left), `pack_left`)
 })
@@ -60,7 +57,8 @@ test("Unpack and pack", async () => {
   const unpacked = unpack(packed)
 
   const first = unpacked.subarray(2, 2 + 3)
-  const firstb = new Binary(pack_left(first))
-  const firstn = firstb.readUint8()
-  console.log(first, firstn)
+  const firstb = new DataView(pack_left(first).buffer)
+  const firstn = firstb.getUint8(0)
+
+  assert(firstn === 7)
 })
