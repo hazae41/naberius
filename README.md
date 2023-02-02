@@ -43,8 +43,8 @@ const bodyBits = unpack(bodyBytes)
 
 // Concat both bits arrays
 const fullBits = new Uint8Array(headerBits.length + bodyBits.length)
-bits.set(headerBits, 0)
-bits.set(bodyBits, headerBits.length)
+fullBits.set(headerBits, 0)
+fullBits.set(bodyBits, headerBits.length)
 
 // Pack adding 0-padding to the right
 const fullBytes = pack_right(fullBits)

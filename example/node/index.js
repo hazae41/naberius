@@ -1,16 +1,23 @@
-import { Morax, Sha1Hasher } from "@hazae41/morax";
+import { Packer, pack_right, unpack } from "../../src/node/index.js";
 
-Morax.initSyncBundledOnce()
+Packer.initSyncBundledOnce()
 
-const hasher = new Sha1Hasher()
+// Create a header of bits
+const headerBits = new Uint8Array([0x00, 0x01, 0x00, 0x01])
 
-const hello = new TextEncoder().encode("Hello World")
+// Create a body of bytes
+const bodyBytes = new Uint8Array(256)
+crypto.getRandomValues(bodyBytes)
 
-hasher.update(hello)
-const digest = hasher.finalize()
+// Unpack it
+const bodyBits = unpack(bodyBytes)
 
-hasher.update(hello)
-const digest2 = hasher.finalize()
+// Concat both bits arrays
+const fullBits = new Uint8Array(headerBits.length + bodyBits.length)
+fullBits.set(headerBits, 0)
+fullBits.set(bodyBits, headerBits.length)
 
-console.log(digest)
-console.log(digest2)
+// Pack adding 0-padding to the right
+const fullBytes = pack_right(fullBits)
+
+console.log(fullBytes)
