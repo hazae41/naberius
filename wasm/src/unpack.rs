@@ -1,39 +1,17 @@
 extern crate alloc;
 
-use alloc::vec::Vec;
-
 use wasm_bindgen::prelude::*;
 
-pub struct Unpacker {
-    value: u8,
-    index: u8,
-}
-
-impl Unpacker {
-    pub fn new(value: u8) -> Unpacker {
-        Unpacker { value, index: 0 }
-    }
-}
-
-impl Iterator for Unpacker {
-    type Item = u8;
-
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        (8, Some(8))
-    }
-
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.index == 8 {
-            return None;
-        }
-
-        let bit = self.value >> (8 - self.index - 1) & 1;
-        self.index += 1;
-        Some(bit)
-    }
-}
-
 #[wasm_bindgen]
-pub fn unpack(bytes: &[u8]) -> Vec<u8> {
-    bytes.iter().flat_map(|x| Unpacker::new(*x)).collect()
+pub unsafe fn unpack_unsafe(bytes: &[u8], bits: &mut [u8]) {
+    let mut i: usize = 0;
+    let mut j: usize = 0;
+
+    while i < bytes.len() {
+        for k in (0..8).rev() {
+            *bits.get_unchecked_mut(j) = (bytes.get_unchecked(i) >> k) & 1;
+            j = j.unchecked_add(1);
+        }
+        i = i.unchecked_add(1);
+    }
 }

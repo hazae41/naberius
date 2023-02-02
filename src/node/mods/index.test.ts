@@ -43,8 +43,10 @@ test("Ambiguous", async ({ test }) => {
     0, 0, 0, 1,
   ])
 
-  assert(equals(unpack(pack_right(ambiguous)), unambiguous_right))
-  assert(equals(unpack(pack_left(ambiguous)), unambiguous_left))
+  console.log(pack_left(ambiguous))
+  console.log(unpack(pack_right(ambiguous)))
+  assert(equals(unpack(pack_right(ambiguous)), unambiguous_right), `pack_right`)
+  assert(equals(unpack(pack_left(ambiguous)), unambiguous_left), `pack_left`)
 })
 
 test("Unpack and pack", async () => {

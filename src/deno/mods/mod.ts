@@ -1,12 +1,12 @@
-export * from "../../../wasm/pkg/morax.js";
+export * from "../../../wasm/pkg/pack.js";
 
 import * as Base64 from "https://deno.land/std@0.158.0/encoding/base64.ts";
 
-// @deno-types="../../../wasm/pkg/morax.d.ts"
-import { init, initSync } from "../../../wasm/pkg/morax.js";
+// @deno-types="../../../wasm/pkg/pack.d.ts"
+import { init, initSync, pack_left_unsafe, pack_right_unsafe, unpack_unsafe } from "../../../wasm/pkg/pack.js";
 
-import { InitOutput } from "../../../wasm/pkg/morax.d.ts";
-import { wasm } from "../../../wasm/pkg/morax.wasm.js";
+import { InitOutput } from "../../../wasm/pkg/pack.d.ts";
+import { wasm } from "../../../wasm/pkg/pack.wasm.js";
 
 let output: InitOutput | undefined = undefined
 
@@ -16,4 +16,22 @@ export function initSyncBundledOnce() {
 
 export async function initBundledOnce() {
   return output ??= await init(Base64.decode(wasm))
+}
+
+export function unpack(bytes: Uint8Array) {
+  const bits = new Uint8Array(bytes.length * 8)
+  unpack_unsafe(bytes, bits)
+  return bits
+}
+
+export function pack_left(bits: Uint8Array) {
+  const bytes = new Uint8Array((bits.length + 8 - 1) / 8)
+  pack_left_unsafe(bits, bytes)
+  return bytes
+}
+
+export function pack_right(bits: Uint8Array) {
+  const bytes = new Uint8Array((bits.length + 8 - 1) / 8)
+  pack_right_unsafe(bits, bytes)
+  return bytes
 }

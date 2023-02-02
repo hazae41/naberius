@@ -1,20 +1,13 @@
-import { benchSync } from "@hazae41/deimos";
-import crypto from "crypto";
-import { initBundledOnce, unpack } from "mods/index.js";
-import { relative, resolve } from "path";
-
-const directory = resolve("./dist/bench/")
-const { pathname } = new URL(import.meta.url)
-console.log(relative(directory, pathname.replace(".mjs", ".ts")))
+import { initBundledOnce, unpack } from "../mod.ts";
 
 await initBundledOnce()
 
-const samples = 10_000
+const group = "number"
 
 const packed = new Uint8Array(256)
 crypto.getRandomValues(packed)
 
-const resultWasm = benchSync("wasm", () => {
+Deno.bench("wasm", { group, baseline: true }, () => {
   const unpacked = unpack(packed)
 
   const result = unpacked.subarray(3, 5).reduce((res, x) => res << 1 | x)
@@ -25,9 +18,9 @@ const resultWasm = benchSync("wasm", () => {
   const x = result + result2 + result3 + result4
 
   // assert(result === 3)
-}, { samples })
+})
 
-const resultJs = benchSync("js (array)", () => {
+Deno.bench("js (array)", { group }, () => {
   const unpacked = new Uint8Array(packed.length * 8)
 
   for (let j = 0; j < packed.length; j++)
@@ -42,9 +35,9 @@ const resultJs = benchSync("js (array)", () => {
   const x = result + result2 + result3 + result4
 
   // assert(result === 3)
-}, { samples })
+})
 
-const resultJs2 = benchSync("js (string)", () => {
+Deno.bench("js (string)", { group }, () => {
   let unpacked = ""
 
   for (const byte of packed)
@@ -59,7 +52,4 @@ const resultJs2 = benchSync("js (string)", () => {
   const x = result + result2 + result3 + result4
 
   // assert(result === 3)
-}, { samples })
-
-console.log(`${resultWasm.message} is ${resultWasm.ratio(resultJs)} times faster than ${resultJs.message}`)
-console.log(`${resultWasm.message} is ${resultWasm.ratio(resultJs2)} times faster than ${resultJs2.message}`)
+})

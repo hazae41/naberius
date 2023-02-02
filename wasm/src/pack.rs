@@ -1,37 +1,68 @@
 extern crate alloc;
 
-use alloc::vec::Vec;
-
 use wasm_bindgen::prelude::*;
 
-pub fn subpack_right(bits: &[u8]) -> u8 {
-    let mut byte = 0;
-    for bit in bits {
-        byte = byte << 1 | bit
+#[wasm_bindgen]
+pub unsafe fn pack_right_unsafe(bits: &[u8], bytes: &mut [u8]) {
+    let mut i: usize = 0;
+    let mut j: usize = 0;
+    let mut k: usize;
+
+    let r = bits.len() % 8;
+    let e = bits.len() - r;
+
+    while j < e {
+        let mut b = 0;
+        k = 0;
+        while k < 8 {
+            b = b << 1 | bits.get_unchecked(j);
+            j = j.unchecked_add(1);
+            k = k.unchecked_add(1);
+        }
+        *bytes.get_unchecked_mut(i) = b;
+        i = i.unchecked_add(1);
     }
-    for _ in bits.len()..8 {
-        byte = byte << 1 | 0
+
+    if r > 0 {
+        let mut b = 0;
+        k = 0;
+        while k < r {
+            b = b << 1 | bits.get_unchecked(j);
+            j = j.unchecked_add(1);
+            k = k.unchecked_add(1);
+        }
+        while k < 8 {
+            b = b << 1 | 0;
+            k = k.unchecked_add(1);
+        }
+        *bytes.get_unchecked_mut(i) = b;
     }
-    byte
 }
 
 #[wasm_bindgen]
-pub fn pack_right(bits: &[u8]) -> Vec<u8> {
-    bits.chunks(8).map(subpack_right).collect()
-}
+pub unsafe fn pack_left_unsafe(bits: &[u8], bytes: &mut [u8]) {
+    let mut i: usize = 0;
+    let mut j: usize = 0;
 
-pub fn subpack_left(bits: &[u8]) -> u8 {
-    let mut byte = 0;
-    for i in 0..bits.len() {
-        byte = byte << 1 | bits[bits.len() - i - 1]
+    let r = bits.len() % 8;
+
+    if r > 0 {
+        let mut b = 0;
+        while j < r {
+            b = (b << 1) | bits.get_unchecked(j);
+            j = j.unchecked_add(1);
+        }
+        *bytes.get_unchecked_mut(i) = b;
+        i = i.unchecked_add(1);
     }
-    byte
-}
 
-#[wasm_bindgen]
-pub fn pack_left(bits: &mut [u8]) -> Vec<u8> {
-    bits.reverse();
-    let bytes = bits.chunks(8).map(subpack_left).rev().collect::<Vec<u8>>();
-    bits.reverse();
-    bytes
+    while j < bits.len() {
+        let mut b = 0;
+        for _ in 0..8 {
+            b = b << 1 | bits.get_unchecked(j);
+            j = j.unchecked_add(1);
+        }
+        *bytes.get_unchecked_mut(i) = b;
+        i = i.unchecked_add(1);
+    }
 }

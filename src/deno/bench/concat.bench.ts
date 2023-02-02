@@ -1,11 +1,4 @@
-import { benchSync } from "@hazae41/deimos";
-import crypto from "crypto";
-import { initBundledOnce, pack_right } from "mods/index.js";
-import { relative, resolve } from "path";
-
-const directory = resolve("./dist/bench/")
-const { pathname } = new URL(import.meta.url)
-console.log(relative(directory, pathname.replace(".mjs", ".ts")))
+import { initBundledOnce, pack_right } from "../mod.ts";
 
 await initBundledOnce()
 
@@ -13,22 +6,22 @@ await initBundledOnce()
  * The goal here is to concat a header of bits (whose length is not multiple of 8) to a body of bytes
  */
 
-const samples = 10_000
+const group = "concat"
 
 const body = new Uint8Array(256)
 crypto.getRandomValues(body)
 
-const resultWasm = benchSync("wasm", () => {
+Deno.bench("wasm", { group, baseline: true }, () => {
   const header = new Uint8Array([0x00, 0x01, 0x00, 0x01])
 
-  const full = new Uint8Array(header.length + body.length)
-  full.set(header, 0)
-  full.set(body, header.length)
+  const fullUnpacked = new Uint8Array(header.length + body.length)
+  fullUnpacked.set(header, 0)
+  fullUnpacked.set(body, header.length)
 
-  const fullPacked = pack_right(full)
-}, { samples })
+  const fullPacked = pack_right(fullUnpacked)
+})
 
-const resultJs = benchSync("js (array)", () => {
+Deno.bench("js (array)", { group }, () => {
   const header = new Uint8Array([0x00, 0x01, 0x00, 0x01])
 
   const bodyUnpacked = new Uint8Array(body.length * 8)
@@ -56,9 +49,9 @@ const resultJs = benchSync("js (array)", () => {
 
     fullPacked[i / 8] = chunk2.reduce((res, x) => res << 1 | x)
   }
-}, { samples })
+})
 
-const resultJs2 = benchSync("js (string)", () => {
+Deno.bench("js (string)", { group }, () => {
   const header = new Uint8Array([0x00, 0x01, 0x00, 0x01])
 
   let fullString = ""
@@ -71,7 +64,4 @@ const resultJs2 = benchSync("js (string)", () => {
     const chunk = fullString.slice(i, Math.min(i + 8, fullString.length));
     fullPacked[i / 8] = parseInt(chunk.padEnd(8, "0"), 2)
   }
-}, { samples })
-
-console.log(`${resultWasm.message} is ${resultWasm.ratio(resultJs)} times faster than ${resultJs.message}`)
-console.log(`${resultWasm.message} is ${resultWasm.ratio(resultJs2)} times faster than ${resultJs2.message}`)
+})

@@ -1,6 +1,7 @@
 import { Buffer } from "https://deno.land/std@0.170.0/node/buffer.ts";
 import { assert, test } from "npm:@hazae41/phobos";
-import { initBundledOnce, Sha1Hasher } from "./mod.ts";
+import { pack_right } from "../../node/mods/index.ts";
+import { initBundledOnce, pack_left, unpack } from "./mod.ts";
 
 function equals(a: Uint8Array, b: Uint8Array) {
   const ba = Buffer.from(a.buffer)
@@ -9,27 +10,50 @@ function equals(a: Uint8Array, b: Uint8Array) {
   return ba.equals(bb)
 }
 
-test("SHA-1", async () => {
-  await initBundledOnce()
+await initBundledOnce()
 
-  const hello = new TextEncoder().encode("Hello World")
+test("Unpack and pack", async () => {
+  const aaa = pack_right(new Uint8Array([0, 0, 0, 0, 1]))
+  const bbb = pack_right(unpack(new Uint8Array([8])))
+  assert(equals(aaa, bbb))
+})
 
-  const hasher = new Sha1Hasher()
-  const hasher2 = new Sha1Hasher()
+test("Ambiguous", async ({ test }) => {
+  const ambiguous = new Uint8Array([
+    1, 1, 1, 0,
+    1, 1, 1, 1,
+    0, 0, 0, 1,
+  ])
 
-  hasher.update(hello)
-  hasher2.update(hello)
+  const unambiguous_right = new Uint8Array([
+    1, 1, 1, 0,
+    1, 1, 1, 1,
+    0, 0, 0, 1,
+    0, 0, 0, 0
+  ])
 
-  const digest = hasher.finalize()
-  const digest2 = hasher2.finalize()
+  const unambiguous_left = new Uint8Array([
+    0, 0, 0, 0,
+    1, 1, 1, 0,
+    1, 1, 1, 1,
+    0, 0, 0, 1,
+  ])
 
-  assert(equals(digest, digest2), `digests should be equal`)
+  assert(equals(unpack(pack_right(ambiguous)), unambiguous_right), `pack_right`)
+  assert(equals(unpack(pack_left(ambiguous)), unambiguous_left), `pack_left`)
+})
 
-  hasher.update(hello)
-  hasher2.update(hello)
+test("Unpack and pack", async () => {
 
-  const digest3 = hasher.finalize()
-  const digest4 = hasher2.finalize()
+  assert(equals(
+    pack_right(new Uint8Array([0, 0, 0, 0, 1])),
+    pack_right(unpack(new Uint8Array([8])))
+  ))
 
-  assert(equals(digest3, digest4), `digests should be equal`)
+  const packed = new Uint8Array([0b00111001, 0b11001100])
+  const unpacked = unpack(packed)
+
+  const first = unpacked.subarray(2, 2 + 3)
+  const firstb = new DataView(pack_left(first))
+  const firstn = firstb.getUint8(0)
 })
