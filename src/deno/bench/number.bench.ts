@@ -4,7 +4,7 @@ await initBundledOnce()
 
 const group = "number"
 
-const packed = new Uint8Array(256)
+const packed = new Uint8Array(1024)
 crypto.getRandomValues(packed)
 
 Deno.bench("wasm", { group, baseline: true }, () => {

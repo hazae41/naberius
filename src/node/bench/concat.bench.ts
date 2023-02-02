@@ -15,7 +15,7 @@ await initBundledOnce()
 
 const samples = 10_000
 
-const body = new Uint8Array(256)
+const body = new Uint8Array(1024)
 crypto.getRandomValues(body)
 
 const resultWasm = benchSync("wasm", () => {

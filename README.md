@@ -4,7 +4,7 @@ Transform a array of bytes to an array of bits (aka bitfield), and vice-versa, u
 
 ### Benchmark 
 
-The goal here is to concat a header of bits (whose length is not multiple of 8) to a body of bytes
+The goal here is to concat a header of 4 bits to a body of 1024 bytes
 
 ```
 cpu: Apple M1 Max
@@ -13,14 +13,33 @@ runtime: deno 1.30.0 (aarch64-apple-darwin)
 file:///src/deno/bench/concat.bench.ts
 benchmark        time (avg)             (min … max)       p75       p99      p995
 --------------------------------------------------- -----------------------------
-wasm           3.09 µs/iter      (2.98 µs … 3.5 µs)   3.08 µs    3.5 µs    3.5 µs
-js (array)   168.04 µs/iter  (60.71 µs … 767.79 µs) 259.46 µs 293.12 µs 297.46 µs
-js (string)   22.84 µs/iter  (21.79 µs … 123.62 µs)  22.21 µs  58.38 µs  64.83 µs
+wasm            7.4 µs/iter      (6 µs … 276.12 µs)   7.42 µs  10.96 µs  12.42 µs
+js (array)    654.3 µs/iter    (244.5 µs … 3.04 ms)   1.01 ms   1.13 ms   1.14 ms
+js (string)    88.7 µs/iter  (86.04 µs … 226.67 µs)  86.67 µs 153.75 µs 162.04 µs
 
 summary
   wasm
-   7.4x faster than js (string)
-   54.47x faster than js (array)
+   11.99x faster than js (string)
+   88.43x faster than js (array)
+```
+
+The goal here is to unpack 1024 bytes in order to read 3-bits numbers
+
+```
+cpu: Apple M1 Max
+runtime: deno 1.30.0 (aarch64-apple-darwin)
+
+file:///src/deno/bench/number.bench.ts
+benchmark        time (avg)             (min … max)       p75       p99      p995
+--------------------------------------------------- -----------------------------
+wasm           3.12 µs/iter     (3.07 µs … 3.31 µs)   3.12 µs   3.31 µs   3.31 µs
+js (array)    10.53 µs/iter   (8.42 µs … 116.96 µs)  13.21 µs  16.21 µs  16.54 µs
+js (string)  260.06 µs/iter (243.83 µs … 698.79 µs) 246.21 µs 571.17 µs 576.71 µs
+
+summary
+  wasm
+   3.37x faster than js (array)
+   83.27x faster than js (string)
 ```
 
 ### Usage

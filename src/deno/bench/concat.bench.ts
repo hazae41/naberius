@@ -8,7 +8,7 @@ await initBundledOnce()
 
 const group = "concat"
 
-const body = new Uint8Array(256)
+const body = new Uint8Array(1024)
 crypto.getRandomValues(body)
 
 Deno.bench("wasm", { group, baseline: true }, () => {
