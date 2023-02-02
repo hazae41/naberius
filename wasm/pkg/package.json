@@ -1,22 +1,22 @@
 {
-  "name": "packer",
+  "name": "naberius",
   "collaborators": [
     "hazae41 <hazae41@proton.me>"
   ],
-  "description": "WebAssembly bits <=> bytes conversion.",
+  "description": "WebAssembly bits processing utilities.",
   "version": "1.0.0",
   "license": "Unlicense",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hazae41/packer-wasm"
+    "url": "https://github.com/hazae41/naberius-wasm"
   },
   "files": [
-    "packer_bg.wasm",
-    "packer.js",
-    "packer.d.ts",
+    "naberius_bg.wasm",
+    "naberius.js",
+    "naberius.d.ts",
     "LICENSE.md"
   ],
-  "module": "packer.js",
-  "types": "packer.d.ts",
+  "module": "naberius.js",
+  "types": "naberius.d.ts",
   "sideEffects": false
 }

@@ -1,6 +1,6 @@
-import { Packer, pack_right, unpack } from "../../src/node/index.js";
+import { Naberius, pack_right, unpack } from "../../src/node/index.js";
 
-Packer.initSyncBundledOnce()
+Naberius.initSyncBundledOnce()
 
 // Create a header of bits
 const headerBits = new Uint8Array([0x00, 0x01, 0x00, 0x01])

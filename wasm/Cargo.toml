@@ -1,12 +1,12 @@
 [package]
-name = "packer"
+name = "naberius"
 version = "1.0.0"
 authors = ["hazae41 <hazae41@proton.me>"]
 edition = "2021"
 
-description = "WebAssembly bits <=> bytes conversion."
-repository = "https://github.com/hazae41/packer-wasm"
-license = "Unlicense"
+description = "WebAssembly bits processing utilities."
+repository = "https://github.com/hazae41/naberius-wasm"
+license = "MIT"
 
 [lib]
 crate-type = ["cdylib"]
