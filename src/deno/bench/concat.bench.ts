@@ -1,4 +1,4 @@
-import { initBundledOnce, pack_right } from "../mod.ts";
+import { initBundledOnce, pack_right, unpack } from "../mod.ts";
 
 await initBundledOnce()
 
@@ -13,10 +13,11 @@ crypto.getRandomValues(body)
 
 Deno.bench("wasm", { group, baseline: true }, () => {
   const header = new Uint8Array([0x00, 0x01, 0x00, 0x01])
+  const bodyUnpacked = unpack(body)
 
-  const fullUnpacked = new Uint8Array(header.length + body.length)
+  const fullUnpacked = new Uint8Array(header.length + bodyUnpacked.length)
   fullUnpacked.set(header, 0)
-  fullUnpacked.set(body, header.length)
+  fullUnpacked.set(bodyUnpacked, header.length)
 
   const fullPacked = pack_right(fullUnpacked)
 })

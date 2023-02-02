@@ -1,6 +1,6 @@
 import { benchSync } from "@hazae41/deimos";
 import crypto from "crypto";
-import { initBundledOnce, pack_right } from "mods/index.js";
+import { initBundledOnce, pack_right, unpack } from "mods/index.js";
 import { relative, resolve } from "path";
 
 const directory = resolve("./dist/bench/")
@@ -20,12 +20,13 @@ crypto.getRandomValues(body)
 
 const resultWasm = benchSync("wasm", () => {
   const header = new Uint8Array([0x00, 0x01, 0x00, 0x01])
+  const bodyUnpacked = unpack(body)
 
-  const full = new Uint8Array(header.length + body.length)
-  full.set(header, 0)
-  full.set(body, header.length)
+  const fullUnpacked = new Uint8Array(header.length + bodyUnpacked.length)
+  fullUnpacked.set(header, 0)
+  fullUnpacked.set(bodyUnpacked, header.length)
 
-  const fullPacked = pack_right(full)
+  const fullPacked = pack_right(fullUnpacked)
 }, { samples })
 
 const resultJs = benchSync("js (array)", () => {

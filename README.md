@@ -1,53 +1,53 @@
-# SHA-1 for WebAssembly
+# Bits unpacker for WebAssembly
 
-WebAssembly port of RustCrypto's [SHA-1](https://github.com/RustCrypto/block-ciphers), 
-a Rust implementations of SHA-1 hashing.
+Transform a array of bytes to an array of bits (aka bitfield), and vice-versa, using WebAssembly
 
-```bash
-npm i @hazae41/morax
+### Benchmark 
+
+The goal here is to concat a header of bits (whose length is not multiple of 8) to a body of bytes
+
 ```
+cpu: Apple M1 Max
+runtime: deno 1.30.0 (aarch64-apple-darwin)
 
-[**Node Package 📦**](https://www.npmjs.com/package/@hazae41/morax) • [**Deno Module 🦖**](https://deno.land/x/morax) • [**Next.js CodeSandbox 🪣**](https://codesandbox.io/p/github/hazae41/morax-example-next)
+file:///src/deno/bench/concat.bench.ts
+benchmark        time (avg)             (min … max)       p75       p99      p995
+--------------------------------------------------- -----------------------------
+wasm           3.09 µs/iter      (2.98 µs … 3.5 µs)   3.08 µs    3.5 µs    3.5 µs
+js (array)   168.04 µs/iter  (60.71 µs … 767.79 µs) 259.46 µs 293.12 µs 297.46 µs
+js (string)   22.84 µs/iter  (21.79 µs … 123.62 µs)  22.21 µs  58.38 µs  64.83 µs
 
-### Use case 
-
-This WebAssembly module is useful when you want to use SHA-1 incrementially, as WebCrypto doesn't support incremental hashing, and want good performances.
-
-|  | Performances | Incremental hashing |
-|---|---|---|
-| Morax | ⭐️⭐️⭐️⭐️    | ✅ |
-| WebCrypto | ⭐️⭐️⭐️⭐️⭐️     | ❌ |
-| JavaScript | ⭐️⭐️⭐️  | ✅ |
+summary
+  wasm
+   7.4x faster than js (string)
+   54.47x faster than js (array)
+```
 
 ### Usage
 
 ```ts
-import { Morax, Sha1Hasher } from "@hazae41/morax";
+import { Packer, unpack, pack_right } from "@hazae41/morax";
 
 // Wait for WASM to load
-Morax.initSyncBundledOnce()
+Packer.initSyncBundledOnce()
 
-// Create a hash
-const hasher = new Sha1Hasher()
+// Create a header of bits
+const headerBits = new Uint8Array([0x00, 0x01, 0x00, 0x01])
 
-// Data to be hashed
-const hello = new TextEncoder().encode("Hello World")
+// Create a body of bytes
+const bodyBytes = new Uint8Array(256)
+crypto.getRandomValues(bodyBytes)
 
-// Update the hash with your data
-hasher.update(hello)
+// Unpack it
+const bodyBits = unpack(bodyBytes)
 
-// Grab the digest (20 bytes)
-const digest = hasher.finalize()
+// Concat both bits arrays
+const fullBits = new Uint8Array(headerBits.length + bodyBits.length)
+bits.set(headerBits, 0)
+bits.set(bodyBits, headerBits.length)
 
-// Update the hash another time
-hasher.update(hello)
-
-// Grab the digest (20 bytes)
-const digest2 = hasher.finalize()
-
-// digest !== digest2
-console.log(digest)
-console.log(digest2)
+// Pack adding 0-padding to the right
+const fullBytes = pack_right(fullBits)
 ```
 
 ### Unreproducible building
