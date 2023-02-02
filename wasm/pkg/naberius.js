@@ -69,6 +69,23 @@ export function unpack_unsafe(bytes, bits) {
     }
 }
 
+/**
+* @param {Uint8Array} bytes
+* @param {Uint8Array} mask
+*/
+export function xor_mod(bytes, mask) {
+    try {
+        var ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
+        var len0 = WASM_VECTOR_LEN;
+        const ptr1 = passArray8ToWasm0(mask, wasm.__wbindgen_malloc);
+        const len1 = WASM_VECTOR_LEN;
+        wasm.xor_mod(ptr0, len0, ptr1, len1);
+    } finally {
+        bytes.set(getUint8Memory0().subarray(ptr0 / 1, ptr0 / 1 + len0));
+        wasm.__wbindgen_free(ptr0, len0 * 1);
+    }
+}
+
 async function load(module, imports) {
     if (typeof Response === 'function' && module instanceof Response) {
         if (typeof WebAssembly.instantiateStreaming === 'function') {

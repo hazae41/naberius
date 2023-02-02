@@ -2,11 +2,7 @@ import { initBundledOnce, unpack } from "../mod.ts";
 
 await initBundledOnce()
 
-/**
- * The goal here is to concat a header of bits (whose length is not multiple of 8) to a packed of bytes
- */
-
-const group = "concat"
+const group = "unpack"
 
 const packed = new Uint8Array(1024)
 crypto.getRandomValues(packed)

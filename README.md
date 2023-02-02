@@ -17,6 +17,7 @@ npm i @hazae41/naberius
 - unpack: transform an array of bytes to an array of bits (aka bitfield)
 - pack_left: transform an array of bits to a left-padded array of bytes
 - pack_right: transform an array of bits to a right-padded array of bytes
+- xor_mod: apply in-place XOR to an array of bytes using a mask
 
 ## Benchmarks
 
@@ -42,6 +43,8 @@ summary
 ```
 
 #### Node
+
+Node 18.12.1
 
 ```
 src/node/bench/unpack.bench.ts
@@ -72,10 +75,40 @@ summary
 
 #### Node
 
+Node 18.12.1
+
 ```
 src/node/bench/pack_right.bench.ts
 wasm is 47.234917396897835 times faster than js (array)
 wasm is 16.87868631584659 times faster than js (string)
+```
+
+### xor_mod
+
+#### Deno
+
+```
+cpu: Apple M1 Max
+runtime: deno 1.30.0 (aarch64-apple-darwin)
+
+file:///src/deno/bench/xor_mod.bench.ts
+benchmark      time (avg)             (min … max)       p75       p99      p995
+------------------------------------------------- -----------------------------
+wasm       888.48 ns/iter    (874.06 ns … 1.1 µs) 885.63 ns    1.1 µs    1.1 µs
+js           1.16 µs/iter     (1.15 µs … 1.17 µs)   1.16 µs   1.17 µs   1.17 µs
+
+summary
+  wasm
+   1.3x faster than js
+```
+
+#### Node 
+
+Node 18.12.1
+
+```
+src/node/bench/xor_mod.bench.ts
+wasm is 20.27846305923784 times faster than js
 ```
 
 ## Usage

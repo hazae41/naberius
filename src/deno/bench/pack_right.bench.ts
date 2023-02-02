@@ -2,7 +2,7 @@ import { initBundledOnce, pack_right, unpack } from "../mod.ts";
 
 await initBundledOnce()
 
-const group = "number"
+const group = "pack_right"
 
 const packed = new Uint8Array(1025)
 crypto.getRandomValues(packed)

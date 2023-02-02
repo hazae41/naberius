@@ -9,10 +9,6 @@ console.log(relative(directory, pathname.replace(".mjs", ".ts")))
 
 await initBundledOnce()
 
-/**
- * The goal here is to concat a header of bits (whose length is not multiple of 8) to a body of bytes
- */
-
 const samples = 10_000
 
 const packed = new Uint8Array(1024)
