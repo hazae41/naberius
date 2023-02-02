@@ -6,7 +6,7 @@ WebAssembly bits processing utilities
 npm i @hazae41/naberius
 ```
 
-## Current features
+## Features
 - unpack: transform an array of bytes to an array of bits (aka bitfield)
 - pack_left: transform an array of bits to a left-padded array of bytes
 - pack_right: transform an array of bits to a right-padded array of bytes
@@ -71,7 +71,9 @@ wasm is 47.234917396897835 times faster than js (array)
 wasm is 16.87868631584659 times faster than js (string)
 ```
 
-### Usage
+## Usage
+
+### Concatening bits
 
 ```ts
 import { Naberius, unpack, pack_right } from "@hazae41/naberius";
@@ -97,6 +99,8 @@ fullBits.set(bodyBits, headerBits.length)
 // Pack adding 0-padding to the right
 const fullBytes = pack_right(fullBits)
 ```
+
+## Building
 
 ### Unreproducible building
 
