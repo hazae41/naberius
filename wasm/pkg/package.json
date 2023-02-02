@@ -5,7 +5,7 @@
   ],
   "description": "WebAssembly bits processing utilities.",
   "version": "1.0.0",
-  "license": "Unlicense",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/hazae41/naberius-wasm"
