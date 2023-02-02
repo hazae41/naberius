@@ -6,14 +6,16 @@ WebAssembly bits processing utilities
 npm i @hazae41/naberius
 ```
 
-### Current features
+## Current features
 - unpack: transform an array of bytes to an array of bits (aka bitfield)
 - pack_left: transform an array of bits to a left-padded array of bytes
 - pack_right: transform an array of bits to a right-padded array of bytes
 
-### Benchmarks
+## Benchmarks
 
-#### unpack
+### unpack
+
+#### Deno
 
 ```
 cpu: Apple M1 Max
@@ -32,7 +34,17 @@ summary
    15.49x faster than js (string)
 ```
 
-#### pack_right
+#### Node
+
+```
+src/node/bench/unpack.bench.ts
+wasm is 5.664258487909241 times faster than js (array)
+wasm is 13.267190571062866 times faster than js (string)
+```
+
+### pack_right
+
+#### Deno 
 
 ```
 cpu: Apple M1 Max
@@ -49,6 +61,14 @@ summary
   wasm
    15.92x faster than js (string)
    242.72x faster than js (array)
+```
+
+#### Node
+
+```
+src/node/bench/pack_right.bench.ts
+wasm is 47.234917396897835 times faster than js (array)
+wasm is 16.87868631584659 times faster than js (string)
 ```
 
 ### Usage
