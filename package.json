@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@hazae41/naberius",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "WebAssembly bits processing utilities",
   "homepage": "https://github.com/hazae41/naberius",
   "repository": "github:hazae41/naberius",
@@ -17,7 +17,7 @@
     "./dist/types"
   ],
   "scripts": {
-    "build:wasm": "cd wasm && rimraf pkg && wasm-pack build --target web --release && node patch.js",
+    "build:wasm": "cd wasm && rimraf pkg && wasm-pack build --target web --release && cd .. && node patch.js",
     "build:dist": "rimraf dist && rollup -c",
     "build": "npm run build:wasm && npm run build:dist",
     "test:node": "node ./dist/test/src/node/index.test.mjs",
