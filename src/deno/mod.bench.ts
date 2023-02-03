@@ -1,1 +1,1 @@
-export * from "./bench/index.bench.ts";
+export * from "./bench/mod.bench.ts";
