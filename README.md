@@ -85,8 +85,6 @@ summary
 
 #### Node
 
-Node 18.12.1
-
 ```
 src/node/bench/pack_right.bench.ts
 cpu: Apple M1 Max
@@ -125,8 +123,6 @@ summary
 ```
 
 #### Node 
-
-Node 18.12.1
 
 ```
 src/node/bench/xor_mod.bench.ts
