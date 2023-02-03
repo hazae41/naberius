@@ -10,8 +10,8 @@ pub unsafe fn unpack_unsafe(bytes: &[u8], bits: &mut [u8]) {
     while i < bytes.len() {
         for k in (0..8).rev() {
             *bits.get_unchecked_mut(j) = (bytes.get_unchecked(i) >> k) & 1;
-            j = j.unchecked_add(1);
+            j += 1;
         }
-        i = i.unchecked_add(1);
+        i += 1;
     }
 }

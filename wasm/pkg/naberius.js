@@ -153,7 +153,7 @@ function initSync(module) {
 
 async function init(input) {
     if (typeof input === 'undefined') {
-        throw new Error();
+        input = new URL('naberius_bg.wasm', import.meta.url);
     }
     const imports = getImports();
 
@@ -168,5 +168,5 @@ async function init(input) {
     return finalizeInit(instance, module);
 }
 
-export { init, initSync }
+export { initSync }
 export default init;

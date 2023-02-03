@@ -8,6 +8,6 @@ pub unsafe fn xor_mod(bytes: &mut [u8], mask: &[u8]) {
 
     while i < bytes.len() {
         *bytes.get_unchecked_mut(i) = bytes.get_unchecked(i) ^ mask.get_unchecked(i % mask.len());
-        i = i.unchecked_add(1);
+        i += 1;
     }
 }
