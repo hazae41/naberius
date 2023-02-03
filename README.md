@@ -11,7 +11,7 @@ WebAssembly bits processing utilities
 npm i @hazae41/naberius
 ```
 
-[**Node Package 📦**](https://www.npmjs.com/package/@hazae41/naberius) • [**Deno Module 🦖**](https://deno.land/x/zepar)
+[**Node Package 📦**](https://www.npmjs.com/package/@hazae41/naberius) • [**Deno Module 🦖**](https://deno.land/x/naberius)
 
 ## Features
 - unpack: transform an array of bytes to an array of bits (aka bitfield)
