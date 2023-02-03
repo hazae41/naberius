@@ -1,6 +1,7 @@
 import { benchSync } from "@hazae41/deimos";
 import crypto from "crypto";
 import { initBundledOnce, xor_mod } from "mods/index.js";
+import { cpus } from "os";
 import { relative, resolve } from "path";
 
 const directory = resolve("./dist/bench/")
@@ -26,4 +27,8 @@ const resultJs = benchSync("js", () => {
     bytes[i] = bytes[i] ^ mask[i % mask.length]
 }, { samples })
 
-console.log(`wasm is ${resultWasm.ratio(resultJs)} times faster than js`)
+console.info(`cpu:`, cpus()[0].model)
+console.info(`runtime:`, `node ${process.version} (${process.arch}-${process.platform})`)
+console.info()
+
+resultWasm.tableAndSummary(resultJs)

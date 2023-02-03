@@ -1,3 +1,5 @@
-await import("./pack_right.bench.js")
 await import("./unpack.bench.js")
+console.info()
+await import("./pack_right.bench.js")
+console.info()
 await import("./xor_mod.bench.js")

@@ -44,12 +44,22 @@ summary
 
 #### Node
 
-Node 18.12.1
-
 ```
 src/node/bench/unpack.bench.ts
-wasm is 5.664258487909241 times faster than js (array)
-wasm is 13.267190571062866 times faster than js (string)
+cpu: Apple M1 Max
+runtime: node v18.12.1 (arm64-darwin)
+
+┌─────────────┬─────────────────┬────────────┬─────────────┐
+│   (index)   │     average     │  minimum   │   maximum   │
+├─────────────┼─────────────────┼────────────┼─────────────┤
+│    wasm     │ '3.09 μs/iter'  │ '2.04 μs'  │ '169.21 μs' │
+│ js (array)  │ '17.64 μs/iter' │ '16.71 μs' │ '854.29 μs' │
+│ js (string) │ '41.94 μs/iter' │ '40.04 μs' │ '218.75 μs' │
+└─────────────┴─────────────────┴────────────┴─────────────┘
+
+Summary
+- wasm is 5.71x faster than js (array)
+- wasm is 13.58x faster than js (string)
 ```
 
 ### pack_right
@@ -79,8 +89,20 @@ Node 18.12.1
 
 ```
 src/node/bench/pack_right.bench.ts
-wasm is 47.234917396897835 times faster than js (array)
-wasm is 16.87868631584659 times faster than js (string)
+cpu: Apple M1 Max
+runtime: node v18.12.1 (arm64-darwin)
+
+┌─────────────┬──────────────────┬─────────────┬─────────────┐
+│   (index)   │     average      │   minimum   │   maximum   │
+├─────────────┼──────────────────┼─────────────┼─────────────┤
+│    wasm     │  '2.44 μs/iter'  │  '2.04 μs'  │ '111.17 μs' │
+│ js (array)  │ '118.16 μs/iter' │ '110.13 μs' │ '464.25 μs' │
+│ js (string) │ '42.15 μs/iter'  │ '40.62 μs'  │  '1.14 ms'  │
+└─────────────┴──────────────────┴─────────────┴─────────────┘
+
+Summary
+- wasm is 48.40x faster than js (array)
+- wasm is 17.26x faster than js (string)
 ```
 
 ### xor_mod
@@ -108,7 +130,18 @@ Node 18.12.1
 
 ```
 src/node/bench/xor_mod.bench.ts
-wasm is 20.27846305923784 times faster than js
+cpu: Apple M1 Max
+runtime: node v18.12.1 (arm64-darwin)
+
+┌─────────┬──────────────────┬─────────────┬─────────────┐
+│ (index) │     average      │   minimum   │   maximum   │
+├─────────┼──────────────────┼─────────────┼─────────────┤
+│  wasm   │ '880.48 ns/iter' │ '750.00 ns' │ '154.00 μs' │
+│   js    │ '17.71 μs/iter'  │ '17.42 μs'  │ '610.67 μs' │
+└─────────┴──────────────────┴─────────────┴─────────────┘
+
+Summary
+- wasm is 20.11x faster than js
 ```
 
 ## Usage

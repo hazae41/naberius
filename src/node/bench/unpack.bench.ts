@@ -1,6 +1,7 @@
 import { benchSync } from "@hazae41/deimos";
 import crypto from "crypto";
 import { initBundledOnce, unpack } from "mods/index.js";
+import { cpus } from "os";
 import { relative, resolve } from "path";
 
 const directory = resolve("./dist/bench/")
@@ -33,5 +34,8 @@ const resultJsString = benchSync("js (string)", () => {
     unpacked += x.toString(2).padStart(8, "0")
 }, { samples })
 
-console.log(`${resultWasm.message} is ${resultWasm.ratio(resultJsArray)} times faster than ${resultJsArray.message}`)
-console.log(`${resultWasm.message} is ${resultWasm.ratio(resultJsString)} times faster than ${resultJsString.message}`)
+console.info(`cpu:`, cpus()[0].model)
+console.info(`runtime:`, `node ${process.version} (${process.arch}-${process.platform})`)
+console.info()
+
+resultWasm.tableAndSummary(resultJsArray, resultJsString)
