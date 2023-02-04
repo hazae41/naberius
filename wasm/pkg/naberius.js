@@ -54,23 +54,6 @@ export function pack_left_unsafe(bits, bytes) {
 
 /**
 * @param {Uint8Array} bytes
-* @param {Uint8Array} mask
-*/
-export function xor_mod(bytes, mask) {
-    try {
-        var ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
-        var len0 = WASM_VECTOR_LEN;
-        const ptr1 = passArray8ToWasm0(mask, wasm.__wbindgen_malloc);
-        const len1 = WASM_VECTOR_LEN;
-        wasm.xor_mod(ptr0, len0, ptr1, len1);
-    } finally {
-        bytes.set(getUint8Memory0().subarray(ptr0 / 1, ptr0 / 1 + len0));
-        wasm.__wbindgen_free(ptr0, len0 * 1);
-    }
-}
-
-/**
-* @param {Uint8Array} bytes
 * @param {Uint8Array} bits
 */
 export function unpack_unsafe(bytes, bits) {
@@ -83,6 +66,23 @@ export function unpack_unsafe(bytes, bits) {
     } finally {
         bits.set(getUint8Memory0().subarray(ptr1 / 1, ptr1 / 1 + len1));
         wasm.__wbindgen_free(ptr1, len1 * 1);
+    }
+}
+
+/**
+* @param {Uint8Array} bytes
+* @param {Uint8Array} mask
+*/
+export function xor_mod(bytes, mask) {
+    try {
+        var ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
+        var len0 = WASM_VECTOR_LEN;
+        const ptr1 = passArray8ToWasm0(mask, wasm.__wbindgen_malloc);
+        const len1 = WASM_VECTOR_LEN;
+        wasm.xor_mod(ptr0, len0, ptr1, len1);
+    } finally {
+        bytes.set(getUint8Memory0().subarray(ptr0 / 1, ptr0 / 1 + len0));
+        wasm.__wbindgen_free(ptr0, len0 * 1);
     }
 }
 

@@ -4,14 +4,20 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub unsafe fn unpack_unsafe(bytes: &[u8], bits: &mut [u8]) {
-    let mut i: usize = 0;
-    let mut j: usize = 0;
+    let mut byte = bytes.as_ptr();
+    let end = byte.add(bytes.len());
 
-    while i < bytes.len() {
-        for k in (0..8).rev() {
-            *bits.get_unchecked_mut(j) = (bytes.get_unchecked(i) >> k) & 1;
-            j += 1;
+    let mut bit = bits.as_mut_ptr();
+
+    let mut k: isize;
+
+    while byte < end {
+        k = 7;
+        while k >= 0 {
+            *bit = (*byte >> k) & 1;
+            bit = bit.add(1);
+            k -= 1;
         }
-        i += 1;
+        byte = byte.add(1);
     }
 }
