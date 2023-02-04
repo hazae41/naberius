@@ -4,65 +4,57 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub unsafe fn pack_right_unsafe(bits: &[u8], bytes: &mut [u8]) {
-    let mut i: usize = 0;
-    let mut j: usize = 0;
-    let mut k: usize;
+    let mut bit = bits.as_ptr();
+    let mut byte = bytes.as_mut_ptr();
 
     let r = bits.len() % 8;
-    let e = bits.len() - r;
 
-    while j < e {
-        let mut b = 0;
-        k = 0;
+    while bit < bits.as_ptr().add(bits.len()).sub(r) {
+        let mut k: usize = 0;
         while k < 8 {
-            b = (b << 1) | bits.get_unchecked(j);
-            j += 1;
+            *byte = (*byte << 1) | *bit;
+            bit = bit.add(1);
             k += 1;
         }
-        *bytes.get_unchecked_mut(i) = b;
-        i += 1;
+        byte = byte.add(1);
     }
 
     if r > 0 {
-        let mut b = 0;
-        k = 0;
+        let mut k: usize = 0;
         while k < r {
-            b = (b << 1) | bits.get_unchecked(j);
-            j += 1;
+            *byte = (*byte << 1) | *bit;
+            bit = bit.add(1);
             k += 1;
         }
         while k < 8 {
-            b = (b << 1) | 0;
+            *byte = (*byte << 1) | 0;
             k += 1;
         }
-        *bytes.get_unchecked_mut(i) = b;
     }
 }
 
 #[wasm_bindgen]
 pub unsafe fn pack_left_unsafe(bits: &[u8], bytes: &mut [u8]) {
-    let mut i: usize = 0;
-    let mut j: usize = 0;
+    let mut bit = bits.as_ptr();
+    let mut byte = bytes.as_mut_ptr();
 
     let r = bits.len() % 8;
 
     if r > 0 {
-        let mut b = 0;
-        while j < r {
-            b = (b << 1) | bits.get_unchecked(j);
-            j += 1;
+        while bit < bits.as_ptr().add(r) {
+            *byte = (*byte << 1) | *bit;
+            bit = bit.add(1);
         }
-        *bytes.get_unchecked_mut(i) = b;
-        i += 1;
+        byte = byte.add(1);
     }
 
-    while j < bits.len() {
-        let mut b = 0;
-        for _ in 0..8 {
-            b = (b << 1) | bits.get_unchecked(j);
-            j += 1;
+    while bit < bits.as_ptr().add(bits.len()) {
+        let mut k: usize = 0;
+        while k < 8 {
+            *byte = (*byte << 1) | *bit;
+            bit = bit.add(1);
+            k += 1;
         }
-        *bytes.get_unchecked_mut(i) = b;
-        i += 1;
+        byte = byte.add(1);
     }
 }
