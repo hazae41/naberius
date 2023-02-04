@@ -14,11 +14,6 @@ export function pack_left_unsafe(bits: Uint8Array, bytes: Uint8Array): void;
 * @param {Uint8Array} bytes
 * @param {Uint8Array} bits
 */
-export function unpack_unsafe0(bytes: Uint8Array, bits: Uint8Array): void;
-/**
-* @param {Uint8Array} bytes
-* @param {Uint8Array} bits
-*/
 export function unpack_unsafe(bytes: Uint8Array, bits: Uint8Array): void;
 /**
 * @param {Uint8Array} bytes
@@ -34,7 +29,6 @@ export interface InitOutput {
   readonly pack_left_unsafe: (a: number, b: number, c: number, d: number) => void;
   readonly unpack_unsafe: (a: number, b: number, c: number, d: number) => void;
   readonly xor_mod: (a: number, b: number, c: number, d: number) => void;
-  readonly unpack_unsafe0: (a: number, b: number, c: number, d: number) => void;
   readonly __wbindgen_malloc: (a: number) => number;
   readonly __wbindgen_free: (a: number, b: number) => void;
 }

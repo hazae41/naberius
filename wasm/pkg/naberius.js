@@ -56,23 +56,6 @@ export function pack_left_unsafe(bits, bytes) {
 * @param {Uint8Array} bytes
 * @param {Uint8Array} bits
 */
-export function unpack_unsafe0(bytes, bits) {
-    try {
-        const ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
-        const len0 = WASM_VECTOR_LEN;
-        var ptr1 = passArray8ToWasm0(bits, wasm.__wbindgen_malloc);
-        var len1 = WASM_VECTOR_LEN;
-        wasm.unpack_unsafe(ptr0, len0, ptr1, len1);
-    } finally {
-        bits.set(getUint8Memory0().subarray(ptr1 / 1, ptr1 / 1 + len1));
-        wasm.__wbindgen_free(ptr1, len1 * 1);
-    }
-}
-
-/**
-* @param {Uint8Array} bytes
-* @param {Uint8Array} bits
-*/
 export function unpack_unsafe(bytes, bits) {
     try {
         const ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
