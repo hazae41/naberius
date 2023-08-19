@@ -1,7 +1,7 @@
 import { Buffer } from "https://deno.land/std@0.170.0/node/buffer.ts";
 import { assert, test } from "npm:@hazae41/phobos";
 import { pack_right } from "../../node/mods/index.ts";
-import { initBundledOnce, pack_left, unpack } from "./mod.ts";
+import { initSyncBundledOnce, pack_left, unpack } from "./mod.ts";
 
 function equals(a: Uint8Array, b: Uint8Array) {
   const ba = Buffer.from(a.buffer)
@@ -10,7 +10,7 @@ function equals(a: Uint8Array, b: Uint8Array) {
   return ba.equals(bb)
 }
 
-await initBundledOnce()
+initSyncBundledOnce()
 
 test("Unpack and pack", async () => {
   const aaa = pack_right(new Uint8Array([0, 0, 0, 0, 1]))

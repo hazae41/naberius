@@ -1,6 +1,6 @@
 import { Naberius, pack_right, unpack } from "../../src/deno/mod.ts";
 
-await Naberius.initBundledOnce()
+await Naberius.initSyncBundledOnce()
 
 // Create a header of bits
 const headerBits = new Uint8Array([0x00, 0x01, 0x00, 0x01])

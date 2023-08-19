@@ -1,6 +1,6 @@
 import { benchSync } from "@hazae41/deimos";
 import crypto from "crypto";
-import { initBundledOnce, unpack } from "mods/index.js";
+import { initSyncBundledOnce, unpack } from "mods/index.js";
 import { cpus } from "os";
 import { relative, resolve } from "path";
 
@@ -8,7 +8,7 @@ const directory = resolve("./dist/bench/")
 const { pathname } = new URL(import.meta.url)
 console.log(relative(directory, pathname.replace(".mjs", ".ts")))
 
-await initBundledOnce()
+initSyncBundledOnce()
 
 const samples = 10_000
 

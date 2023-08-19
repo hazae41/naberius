@@ -1,7 +1,7 @@
 import { assert, test } from "@hazae41/phobos";
 import crypto from "crypto";
 import { relative, resolve } from "path";
-import { initBundledOnce, pack_left, pack_right, unpack, xor_mod } from "./index.js";
+import { initSyncBundledOnce, pack_left, pack_right, unpack, xor_mod } from "./index.js";
 
 const directory = resolve("./dist/test/")
 const { pathname } = new URL(import.meta.url)
@@ -14,7 +14,7 @@ function equals(a: Uint8Array, b: Uint8Array) {
   return ba.equals(bb)
 }
 
-await initBundledOnce()
+initSyncBundledOnce()
 
 test("Unpack and pack", async () => {
   const aaa = pack_right(new Uint8Array([0, 0, 0, 0, 1]))

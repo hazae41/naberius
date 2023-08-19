@@ -13,10 +13,11 @@
   "files": [
     "naberius_bg.wasm",
     "naberius.js",
-    "naberius.d.ts",
-    "LICENSE.md"
+    "naberius.d.ts"
   ],
   "module": "naberius.js",
   "types": "naberius.d.ts",
-  "sideEffects": false
+  "sideEffects": [
+    "./snippets/*"
+  ]
 }

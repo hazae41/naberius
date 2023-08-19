@@ -1,6 +1,6 @@
-import { initBundledOnce, unpack } from "../mod.ts";
+import { initSyncBundledOnce, unpack } from "../mod.ts";
 
-await initBundledOnce()
+initSyncBundledOnce()
 
 const group = "unpack"
 

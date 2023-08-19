@@ -1,6 +1,6 @@
-import { initBundledOnce, xor_mod } from "../mod.ts";
+import { initSyncBundledOnce, xor_mod } from "../mod.ts";
 
-await initBundledOnce()
+initSyncBundledOnce()
 
 const group = "xor_mod"
 

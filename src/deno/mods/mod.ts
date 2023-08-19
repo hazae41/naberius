@@ -3,7 +3,7 @@ export * from "../../../wasm/pkg/naberius.js";
 import * as Base64 from "https://deno.land/std@0.158.0/encoding/base64.ts";
 
 // @deno-types="../../../wasm/pkg/naberius.d.ts"
-import { init, initSync, pack_left_unsafe, pack_right_unsafe, unpack_unsafe } from "../../../wasm/pkg/naberius.js";
+import { initSync, pack_left_unsafe, pack_right_unsafe, unpack_unsafe } from "../../../wasm/pkg/naberius.js";
 
 import { InitOutput } from "../../../wasm/pkg/naberius.d.ts";
 import { wasm } from "../../../wasm/pkg/naberius.wasm.js";
@@ -12,10 +12,6 @@ let output: InitOutput | undefined = undefined
 
 export function initSyncBundledOnce() {
   return output ??= initSync(Base64.decode(wasm))
-}
-
-export async function initBundledOnce() {
-  return output ??= await init(Base64.decode(wasm))
 }
 
 /**

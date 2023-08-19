@@ -1,16 +1,12 @@
 export * from "../../../wasm/pkg/naberius.js";
 
-import { init, InitOutput, initSync, pack_left_unsafe, pack_right_unsafe, unpack_unsafe } from "../../../wasm/pkg/naberius.js";
+import { InitOutput, initSync, pack_left_unsafe, pack_right_unsafe, unpack_unsafe } from "../../../wasm/pkg/naberius.js";
 import { wasm } from "../../../wasm/pkg/naberius.wasm.js";
 
 let output: InitOutput | undefined = undefined
 
 export function initSyncBundledOnce() {
   return output ??= initSync(Buffer.from(wasm, "base64"))
-}
-
-export async function initBundledOnce() {
-  return output ??= await init(Buffer.from(wasm, "base64"))
 }
 
 /**
