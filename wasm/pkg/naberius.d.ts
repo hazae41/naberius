@@ -8,22 +8,19 @@
 export function xor_mod_unsafe(bytes: Uint8Array, mask: Uint8Array): Slice;
 /**
 * @param {Uint8Array} bytes
-* @param {Uint8Array} bits
 * @returns {Slice}
 */
-export function unpack_unsafe(bytes: Uint8Array, bits: Uint8Array): Slice;
+export function unpack_unsafe(bytes: Uint8Array): Slice;
 /**
 * @param {Uint8Array} bits
-* @param {Uint8Array} bytes
 * @returns {Slice}
 */
-export function pack_right_unsafe(bits: Uint8Array, bytes: Uint8Array): Slice;
+export function pack_right_unsafe(bits: Uint8Array): Slice;
 /**
 * @param {Uint8Array} bits
-* @param {Uint8Array} bytes
 * @returns {Slice}
 */
-export function pack_left_unsafe(bits: Uint8Array, bytes: Uint8Array): Slice;
+export function pack_left_unsafe(bits: Uint8Array): Slice;
 /**
 */
 export class Pointer {
@@ -45,10 +42,10 @@ export interface InitOutput {
   readonly __wbg_set_pointer_ptr: (a: number, b: number) => void;
   readonly __wbg_get_pointer_len: (a: number) => number;
   readonly __wbg_set_pointer_len: (a: number, b: number) => void;
-  readonly xor_mod_unsafe: (a: number, b: number, c: number, d: number, e: number) => number;
-  readonly unpack_unsafe: (a: number, b: number, c: number, d: number, e: number) => number;
-  readonly pack_right_unsafe: (a: number, b: number, c: number, d: number, e: number) => number;
-  readonly pack_left_unsafe: (a: number, b: number, c: number, d: number, e: number) => number;
+  readonly xor_mod_unsafe: (a: number, b: number, c: number, d: number) => number;
+  readonly unpack_unsafe: (a: number, b: number) => number;
+  readonly pack_right_unsafe: (a: number, b: number) => number;
+  readonly pack_left_unsafe: (a: number, b: number) => number;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
 }
 

@@ -14,6 +14,7 @@ const script = readFileSync(`./wasm/pkg/naberius.js`, "utf8")
   .replace("input = new URL('naberius_bg.wasm', import.meta.url);", "throw new Error();")
   .replaceAll("{Pointer}", "{Slice}")
   .replaceAll("Pointer.__wrap", "Slice.deref")
+  .replaceAll("new Uint8Array(getObject(arg2).buffer, getObject(arg2).byteOffset, getObject(arg2).byteLength).set(getArrayU8FromWasm0(arg0, arg1));", "")
 
 const typing = readFileSync(`./wasm/pkg/naberius.d.ts`, "utf8")
   .replace("export default function __wbg_init", "export function __wbg_init")
