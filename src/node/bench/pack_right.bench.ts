@@ -15,7 +15,7 @@ const samples = 10_000
 const packed = new Uint8Array(1025)
 crypto.getRandomValues(packed)
 
-const unpacked = unpack(packed).bytes.slice().subarray(0, -4)
+const unpacked = unpack(packed).slice(0, -4)
 
 let unpackedString = ""
 

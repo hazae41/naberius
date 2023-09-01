@@ -6,6 +6,9 @@ writeFileSync(`./wasm/pkg/naberius.wasm.js`, `export const data = "data:applicat
 writeFileSync(`./wasm/pkg/naberius.wasm.d.ts`, `export const data: string;`);
 
 const script = readFileSync(`./wasm/pkg/naberius.js`, "utf8")
+  .replace("let wasm;", "export let wasm;")
+  .replace("function getUint8Memory0", "export function getUint8Memory0")
+  .replace("function passArray8ToWasm0", "export function passArray8ToWasm0")
   .replace("async function __wbg_init", "export async function __wbg_init")
   .replace("input = new URL('naberius_bg.wasm', import.meta.url);", "throw new Error();")
   .replaceAll("wasm.__wbindgen_free(r0, r1 * 1);", "")
@@ -17,7 +20,7 @@ const typing = readFileSync(`./wasm/pkg/naberius.d.ts`, "utf8")
   .replaceAll("@returns {Uint8Array}", "@returns {Slice}")
   .replaceAll(": Uint8Array;", ": Slice;")
 
-const sliceJs = `
+const patchJs = `
 export class Slice {
 
   /**
@@ -47,7 +50,13 @@ export class Slice {
 
 }`
 
-const sliceTs = `
+const patchTs = `
+export let wasm: any
+
+export function getUint8Memory0(): Uint8Array
+
+export function passArray8ToWasm0(arg: any, malloc: any): number
+
 export class Slice {
 
   constructor(ptr: number, len: number);
@@ -58,7 +67,7 @@ export class Slice {
 
 }`
 
-writeFileSync(`./wasm/pkg/naberius.js`, script + sliceJs)
-writeFileSync(`./wasm/pkg/naberius.d.ts`, typing + sliceTs)
+writeFileSync(`./wasm/pkg/naberius.js`, script + patchJs)
+writeFileSync(`./wasm/pkg/naberius.d.ts`, typing + patchTs)
 
 rmSync(`./wasm/pkg/.gitignore`, { force: true });
