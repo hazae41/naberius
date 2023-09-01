@@ -12,15 +12,13 @@ const script = readFileSync(`./wasm/pkg/naberius.js`, "utf8")
   .replace("function passArray8ToWasm0", "export function passArray8ToWasm0")
   .replace("async function __wbg_init", "export async function __wbg_init")
   .replace("input = new URL('naberius_bg.wasm', import.meta.url);", "throw new Error();")
-  .replaceAll("wasm.__wbindgen_free(r0, r1 * 1);", "")
-  .replaceAll("getArrayU8FromWasm0(r0, r1).slice()", "new Slice(r0, r1)")
-  .replaceAll("new Uint8Array(getObject(arg2).buffer, getObject(arg2).byteOffset, getObject(arg2).byteLength).set(getArrayU8FromWasm0(arg0, arg1));", "")
-  .replaceAll("@returns {Uint8Array}", "@returns {Slice}")
+  .replaceAll("{Pointer}", "{Slice}")
+  .replaceAll("Pointer.__wrap", "Slice.deref")
 
 const typing = readFileSync(`./wasm/pkg/naberius.d.ts`, "utf8")
   .replace("export default function __wbg_init", "export function __wbg_init")
-  .replaceAll("@returns {Uint8Array}", "@returns {Slice}")
-  .replaceAll(": Uint8Array;", ": Slice;")
+  .replaceAll("{Pointer}", "{Slice}")
+  .replaceAll(": Pointer", ": Slice")
 
 const patchJs = `
 export class Slice {
@@ -34,6 +32,13 @@ export class Slice {
     this.len = len
     this.start = (ptr >>> 0) / 1
     this.end = this.start + len
+  }
+
+  static deref(ptr) {
+    const pointer = Pointer.__wrap(ptr)
+    const slice = new Slice(pointer.ptr, pointer.len)
+    pointer.free()
+    return slice
   }
 
   /**
@@ -64,6 +69,8 @@ export function passArray8ToWasm0(arg: any, malloc: any): number
 export class Slice {
 
   constructor(ptr: number, len: number);
+
+  static from(pointer: Pointer): Slice
 
   get bytes(): Uint8Array
 

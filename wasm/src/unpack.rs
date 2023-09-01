@@ -2,8 +2,10 @@ extern crate alloc;
 
 use wasm_bindgen::prelude::*;
 
+use crate::Pointer;
+
 #[wasm_bindgen]
-pub unsafe fn unpack_unsafe(bytes: &[u8], bits: &mut [u8]) {
+pub unsafe fn unpack_unsafe(bytes: &[u8], bits: &mut [u8]) -> Pointer {
     let mut byte = bytes.as_ptr();
     let mut bit = bits.as_mut_ptr();
 
@@ -15,5 +17,10 @@ pub unsafe fn unpack_unsafe(bytes: &[u8], bits: &mut [u8]) {
             k -= 1;
         }
         byte = byte.add(1);
+    }
+
+    Pointer {
+        ptr: bits.as_ptr(),
+        len: bits.len(),
     }
 }

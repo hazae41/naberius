@@ -1,6 +1,6 @@
 export * from "../../../wasm/pkg/naberius.js";
 
-import { InitOutput, Slice, WASM_VECTOR_LEN, __wbg_init, getUint8Memory0, passArray8ToWasm0, wasm } from "../../../wasm/pkg/naberius.js";
+import { InitOutput, Slice, WASM_VECTOR_LEN, __wbg_init, getUint8Memory0, passArray8ToWasm0, wasm, xor_mod_unsafe } from "../../../wasm/pkg/naberius.js";
 import { data } from "../../../wasm/pkg/naberius.wasm.js";
 
 let output: InitOutput | undefined = undefined
@@ -70,10 +70,11 @@ export function pack_right(bits: Uint8Array) {
 }
 
 export function xor_mod(bytes: Uint8Array, mask: Uint8Array) {
-  const ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
-  const len0 = WASM_VECTOR_LEN;
-  const ptr1 = passArray8ToWasm0(mask, wasm.__wbindgen_malloc);
-  const len1 = WASM_VECTOR_LEN;
-  wasm.xor_mod_unsafe(ptr0, len0, 0, ptr1, len1);
-  return new Slice(ptr0, len0)
+  return xor_mod_unsafe(bytes, mask) as any as Slice
+  // const ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
+  // const len0 = WASM_VECTOR_LEN;
+  // const ptr1 = passArray8ToWasm0(mask, wasm.__wbindgen_malloc);
+  // const len1 = WASM_VECTOR_LEN;
+  // wasm.xor_mod_unsafe(ptr0, len0, ptr1, len1);
+  // return new Slice(ptr0, len0)
 }
