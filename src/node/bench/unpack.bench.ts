@@ -16,7 +16,7 @@ const packed = new Uint8Array(1024)
 crypto.getRandomValues(packed)
 
 const resultWasm = benchSync("wasm", () => {
-  unpack(packed)
+  unpack(packed).free()
 }, { samples })
 
 const resultJsArray = benchSync("js (array)", () => {

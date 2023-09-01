@@ -1,126 +1,116 @@
-export let wasm;
-
-const cachedTextDecoder = (typeof TextDecoder !== 'undefined' ? new TextDecoder('utf-8', { ignoreBOM: true, fatal: true }) : { decode: () => { throw Error('TextDecoder not available') } } );
-
-if (typeof TextDecoder !== 'undefined') { cachedTextDecoder.decode(); };
+let wasm;
 
 let cachedUint8Memory0 = null;
 
-export function getUint8Memory0() {
+function getUint8Memory0() {
     if (cachedUint8Memory0 === null || cachedUint8Memory0.byteLength === 0) {
         cachedUint8Memory0 = new Uint8Array(wasm.memory.buffer);
     }
     return cachedUint8Memory0;
 }
 
-function getStringFromWasm0(ptr, len) {
-    ptr = ptr >>> 0;
-    return cachedTextDecoder.decode(getUint8Memory0().subarray(ptr, ptr + len));
-}
+let WASM_VECTOR_LEN = 0;
 
-export let WASM_VECTOR_LEN = 0;
-
-export function passArray8ToWasm0(arg, malloc) {
+function passArray8ToWasm0(arg, malloc) {
     const ptr = malloc(arg.length * 1, 1) >>> 0;
     getUint8Memory0().set(arg, ptr / 1);
     WASM_VECTOR_LEN = arg.length;
     return ptr;
 }
+
+let cachedInt32Memory0 = null;
+
+function getInt32Memory0() {
+    if (cachedInt32Memory0 === null || cachedInt32Memory0.byteLength === 0) {
+        cachedInt32Memory0 = new Int32Array(wasm.memory.buffer);
+    }
+    return cachedInt32Memory0;
+}
+
+function getArrayU8FromWasm0(ptr, len) {
+    ptr = ptr >>> 0;
+    return getUint8Memory0().subarray(ptr / 1, ptr / 1 + len);
+}
+/**
+* @param {Uint8Array} bits
+* @returns {Slice}
+*/
+export function pack_right(bits) {
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        const ptr0 = passArray8ToWasm0(bits, wasm.__wbindgen_malloc);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.pack_right(retptr, ptr0, len0);
+        var r0 = getInt32Memory0()[retptr / 4 + 0];
+        var r1 = getInt32Memory0()[retptr / 4 + 1];
+        var v2 = new Slice(r0, r1);
+        ;
+        return v2;
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
+    }
+}
+
+/**
+* @param {Uint8Array} bits
+* @returns {Slice}
+*/
+export function pack_left(bits) {
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        const ptr0 = passArray8ToWasm0(bits, wasm.__wbindgen_malloc);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.pack_left(retptr, ptr0, len0);
+        var r0 = getInt32Memory0()[retptr / 4 + 0];
+        var r1 = getInt32Memory0()[retptr / 4 + 1];
+        var v2 = new Slice(r0, r1);
+        ;
+        return v2;
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
+    }
+}
+
 /**
 * @param {Uint8Array} bytes
 * @param {Uint8Array} mask
 * @returns {Slice}
 */
-export function xor_mod_unsafe(bytes, mask) {
-    const ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ptr1 = passArray8ToWasm0(mask, wasm.__wbindgen_malloc);
-    const len1 = WASM_VECTOR_LEN;
-    const ret = wasm.xor_mod_unsafe(ptr0, len0, ptr1, len1);
-    return Slice.deref(ret);
+export function xor_mod(bytes, mask) {
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        const ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ptr1 = passArray8ToWasm0(mask, wasm.__wbindgen_malloc);
+        const len1 = WASM_VECTOR_LEN;
+        wasm.xor_mod(retptr, ptr0, len0, ptr1, len1);
+        var r0 = getInt32Memory0()[retptr / 4 + 0];
+        var r1 = getInt32Memory0()[retptr / 4 + 1];
+        var v3 = new Slice(r0, r1);
+        ;
+        return v3;
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
+    }
 }
 
 /**
 * @param {Uint8Array} bytes
 * @returns {Slice}
 */
-export function unpack_unsafe(bytes) {
-    const ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.unpack_unsafe(ptr0, len0);
-    return Slice.deref(ret);
-}
-
-/**
-* @param {Uint8Array} bits
-* @returns {Slice}
-*/
-export function pack_right_unsafe(bits) {
-    const ptr0 = passArray8ToWasm0(bits, wasm.__wbindgen_malloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.pack_right_unsafe(ptr0, len0);
-    return Slice.deref(ret);
-}
-
-/**
-* @param {Uint8Array} bits
-* @returns {Slice}
-*/
-export function pack_left_unsafe(bits) {
-    const ptr0 = passArray8ToWasm0(bits, wasm.__wbindgen_malloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.pack_left_unsafe(ptr0, len0);
-    return Slice.deref(ret);
-}
-
-/**
-*/
-export class Pointer {
-
-    static __wrap(ptr) {
-        ptr = ptr >>> 0;
-        const obj = Object.create(Pointer.prototype);
-        obj.__wbg_ptr = ptr;
-
-        return obj;
-    }
-
-    __destroy_into_raw() {
-        const ptr = this.__wbg_ptr;
-        this.__wbg_ptr = 0;
-
-        return ptr;
-    }
-
-    free() {
-        const ptr = this.__destroy_into_raw();
-        wasm.__wbg_pointer_free(ptr);
-    }
-    /**
-    * @returns {number}
-    */
-    get ptr() {
-        const ret = wasm.__wbg_get_pointer_ptr(this.__wbg_ptr);
-        return ret;
-    }
-    /**
-    * @param {number} arg0
-    */
-    set ptr(arg0) {
-        wasm.__wbg_set_pointer_ptr(this.__wbg_ptr, arg0);
-    }
-    /**
-    * @returns {number}
-    */
-    get len() {
-        const ret = wasm.__wbg_get_pointer_len(this.__wbg_ptr);
-        return ret >>> 0;
-    }
-    /**
-    * @param {number} arg0
-    */
-    set len(arg0) {
-        wasm.__wbg_set_pointer_len(this.__wbg_ptr, arg0);
+export function unpack(bytes) {
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        const ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.unpack(retptr, ptr0, len0);
+        var r0 = getInt32Memory0()[retptr / 4 + 0];
+        var r1 = getInt32Memory0()[retptr / 4 + 1];
+        var v2 = new Slice(r0, r1);
+        ;
+        return v2;
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
     }
 }
 
@@ -158,9 +148,6 @@ async function __wbg_load(module, imports) {
 function __wbg_get_imports() {
     const imports = {};
     imports.wbg = {};
-    imports.wbg.__wbindgen_throw = function(arg0, arg1) {
-        throw new Error(getStringFromWasm0(arg0, arg1));
-    };
 
     return imports;
 }
@@ -172,6 +159,7 @@ function __wbg_init_memory(imports, maybe_memory) {
 function __wbg_finalize_init(instance, module) {
     wasm = instance.exports;
     __wbg_init.__wbindgen_wasm_module = module;
+    cachedInt32Memory0 = null;
     cachedUint8Memory0 = null;
 
 
@@ -221,7 +209,7 @@ export class Slice {
   /**
    * @param {number} ptr 
    * @param {number} len 
-   */
+   **/
   constructor(ptr, len) {
     this.ptr = ptr
     this.len = len
@@ -229,16 +217,9 @@ export class Slice {
     this.end = this.start + len
   }
 
-  static deref(ptr) {
-    const pointer = Pointer.__wrap(ptr)
-    const slice = new Slice(pointer.ptr, pointer.len)
-    pointer.free()
-    return slice
-  }
-
   /**
    * @returns {Uint8Array}
-   */
+   **/
   get bytes() {
     return getUint8Memory0().subarray(this.start, this.end)
   }
@@ -248,6 +229,15 @@ export class Slice {
    **/
   free() {
     wasm.__wbindgen_free(this.ptr, this.len * 1);
+  }
+
+  /**
+   * @returns {Uint8Array}
+   **/
+  read() {
+    const bytes = this.bytes.slice()
+    this.free()
+    return bytes
   }
 
 }

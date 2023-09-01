@@ -21,9 +21,9 @@ function equals(a: Uint8Array, b: Uint8Array) {
 await initBundledOnce()
 
 await test("Unpack and pack", async () => {
-  const aaa = pack_right(new Uint8Array([0, 0, 0, 0, 1])).bytes.slice()
+  const aaa = pack_right(new Uint8Array([0, 0, 0, 0, 1])).read()
   console.log(unpack(new Uint8Array([8])))
-  const bbb = pack_right(unpack(new Uint8Array([8])).bytes.slice()).bytes.slice()
+  const bbb = pack_right(unpack(new Uint8Array([8])).read()).read()
   assert(equals(aaa, bbb))
 })
 
@@ -48,24 +48,22 @@ await test("Ambiguous", async ({ test }) => {
     0, 0, 0, 1,
   ])
 
-  console.log(pack_left(ambiguous).bytes.slice())
-
-  assert(equals(unpack(pack_right(ambiguous).bytes.slice()).bytes.slice(), unambiguous_right), `pack_right`)
-  assert(equals(unpack(pack_left(ambiguous).bytes.slice()).bytes.slice(), unambiguous_left), `pack_left`)
+  assert(equals(unpack(pack_right(ambiguous).read()).read(), unambiguous_right), `pack_right`)
+  assert(equals(unpack(pack_left(ambiguous).read()).read(), unambiguous_left), `pack_left`)
 })
 
 await test("Unpack and pack", async () => {
 
   assert(equals(
-    pack_right(new Uint8Array([0, 0, 0, 0, 1])).bytes.slice(),
-    pack_right(unpack(new Uint8Array([8])).bytes.slice()).bytes.slice()
+    pack_right(new Uint8Array([0, 0, 0, 0, 1])).read(),
+    pack_right(unpack(new Uint8Array([8])).read()).read()
   ))
 
   const packed = new Uint8Array([0b00111001, 0b11001100])
-  const unpacked = unpack(packed).bytes.slice()
+  const unpacked = unpack(packed).read()
 
   const sliceBits = unpacked.subarray(2, 2 + 3)
-  const sliceBytes = pack_left(sliceBits).bytes.slice()
+  const sliceBytes = pack_left(sliceBits).read()
   const sliceUint8 = new DataView(sliceBytes.buffer).getUint8(0)
 
   assert(sliceUint8 === 7)
@@ -78,11 +76,11 @@ await test("xor_mod", async () => {
   const mask = new Uint8Array(4)
   crypto.getRandomValues(mask)
 
-  const xored = xor_mod(bytes, mask).bytes.slice()
+  const xored = xor_mod(bytes, mask).read()
 
   assert(!equals(bytes, xored))
 
-  const unxored = xor_mod(xored, mask).bytes.slice()
+  const unxored = xor_mod(xored, mask).read()
 
   assert(equals(bytes, unxored))
 })

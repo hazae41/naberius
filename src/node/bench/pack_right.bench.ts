@@ -22,7 +22,7 @@ let unpackedString = ""
 unpacked.forEach(x => unpackedString += x.toString())
 
 const resultWasm = benchSync("wasm", () => {
-  pack_right(unpacked)
+  pack_right(unpacked).free()
 }, { samples })
 
 const resultJsArray = benchSync("js (array)", () => {

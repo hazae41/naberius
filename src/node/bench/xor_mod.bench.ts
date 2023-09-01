@@ -10,7 +10,7 @@ console.log(relative(directory, pathname.replace(".mjs", ".ts")))
 
 await initBundledOnce()
 
-const samples = 100_000
+const samples = 10_000
 
 const bytes = new Uint8Array(1024)
 crypto.getRandomValues(bytes)
@@ -19,7 +19,7 @@ const mask = new Uint8Array(4)
 crypto.getRandomValues(mask)
 
 const resultWasm = benchSync("wasm", () => {
-  xor_mod(bytes, mask)
+  const slice = xor_mod(bytes, mask).read()
 }, { samples })
 
 const resultJs = benchSync("js", () => {

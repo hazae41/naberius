@@ -3,10 +3,8 @@ extern crate alloc;
 use alloc::vec::Vec;
 use wasm_bindgen::prelude::*;
 
-use crate::Pointer;
-
 #[wasm_bindgen]
-pub unsafe fn unpack_unsafe(bytes: &[u8]) -> Pointer {
+pub unsafe fn unpack(bytes: &[u8]) -> Vec<u8> {
     let length = bytes.len() * 8;
 
     let mut bits = Vec::<u8>::with_capacity(length);
@@ -26,8 +24,5 @@ pub unsafe fn unpack_unsafe(bytes: &[u8]) -> Pointer {
 
     bits.set_len(length);
 
-    Pointer {
-        ptr: bits.as_ptr(),
-        len: bits.len(),
-    }
+    return bits;
 }
