@@ -2,34 +2,37 @@
 /* eslint-disable */
 /**
 * @param {Uint8Array} bits
-* @param {Uint8Array} bytes
+* @returns {Slice}
 */
-export function pack_right_unsafe(bits: Uint8Array, bytes: Uint8Array): void;
+export function pack_right(bits: Uint8Array): Slice;
 /**
 * @param {Uint8Array} bits
-* @param {Uint8Array} bytes
+* @returns {Slice}
 */
-export function pack_left_unsafe(bits: Uint8Array, bytes: Uint8Array): void;
+export function pack_left(bits: Uint8Array): Slice;
 /**
 * @param {Uint8Array} bytes
 * @param {Uint8Array} mask
+* @returns {Slice}
 */
-export function xor_mod(bytes: Uint8Array, mask: Uint8Array): void;
+export function xor_mod(bytes: Uint8Array, mask: Uint8Array): Slice;
 /**
 * @param {Uint8Array} bytes
-* @param {Uint8Array} bits
+* @returns {Slice}
 */
-export function unpack_unsafe(bytes: Uint8Array, bits: Uint8Array): void;
+export function unpack(bytes: Uint8Array): Slice;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
-  readonly pack_right_unsafe: (a: number, b: number, c: number, d: number, e: number) => void;
-  readonly pack_left_unsafe: (a: number, b: number, c: number, d: number, e: number) => void;
+  readonly pack_right: (a: number, b: number, c: number) => void;
+  readonly pack_left: (a: number, b: number, c: number) => void;
   readonly xor_mod: (a: number, b: number, c: number, d: number, e: number) => void;
-  readonly unpack_unsafe: (a: number, b: number, c: number, d: number, e: number) => void;
+  readonly unpack: (a: number, b: number, c: number) => void;
+  readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
+  readonly __wbindgen_free: (a: number, b: number, c: number) => void;
 }
 
 export type SyncInitInput = BufferSource | WebAssembly.Module;
@@ -51,4 +54,14 @@ export function initSync(module: SyncInitInput): InitOutput;
 *
 * @returns {Promise<InitOutput>}
 */
-export default function __wbg_init (module_or_path?: InitInput | Promise<InitInput>): Promise<InitOutput>;
+export function __wbg_init (module_or_path?: InitInput | Promise<InitInput>): Promise<InitOutput>;
+
+export class Slice {
+
+  constructor(ptr: number, len: number);
+
+  get bytes(): Uint8Array
+
+  free(): void
+
+}

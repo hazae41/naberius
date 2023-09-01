@@ -1,6 +1,6 @@
 import { benchSync } from "@hazae41/deimos";
 import crypto from "crypto";
-import { initSyncBundledOnce, pack_right, unpack } from "mods/index.js";
+import { initBundledOnce, pack_right, unpack } from "mods/index.js";
 import { cpus } from "os";
 import { relative, resolve } from "path";
 
@@ -8,14 +8,14 @@ const directory = resolve("./dist/bench/")
 const { pathname } = new URL(import.meta.url)
 console.log(relative(directory, pathname.replace(".mjs", ".ts")))
 
-initSyncBundledOnce()
+await initBundledOnce()
 
 const samples = 10_000
 
 const packed = new Uint8Array(1025)
 crypto.getRandomValues(packed)
 
-const unpacked = unpack(packed).subarray(0, -4)
+const unpacked = unpack(packed).bytes.slice().subarray(0, -4)
 
 let unpackedString = ""
 
@@ -33,7 +33,7 @@ const resultJsArray = benchSync("js (array)", () => {
 
   for (let i = 0; i < unpacked.length; i += 8) {
     const end = Math.min(i + 8, unpacked.length)
-    const chunk = unpacked.slice(i, end);
+    const chunk = unpacked.subarray(i, end).slice();
 
     let chunk2: Uint8Array
 

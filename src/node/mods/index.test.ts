@@ -1,7 +1,7 @@
 import { assert, test } from "@hazae41/phobos";
 import crypto from "crypto";
 import { relative, resolve } from "path";
-import { initSyncBundledOnce, pack_left, pack_right, unpack, xor_mod } from "./index.js";
+import { initBundledOnce, pack_left, pack_right, unpack, xor_mod } from "./index.js";
 
 const directory = resolve("./dist/test/")
 const { pathname } = new URL(import.meta.url)
@@ -11,18 +11,24 @@ function equals(a: Uint8Array, b: Uint8Array) {
   const ba = Buffer.from(a.buffer)
   const bb = Buffer.from(b.buffer)
 
+  console.log()
+  console.log(a)
+  console.log(b)
+  console.log()
+
   return ba.equals(bb)
 }
 
-initSyncBundledOnce()
+await initBundledOnce()
 
-test("Unpack and pack", async () => {
-  const aaa = pack_right(new Uint8Array([0, 0, 0, 0, 1]))
-  const bbb = pack_right(unpack(new Uint8Array([8])))
+await test("Unpack and pack", async () => {
+  const aaa = pack_right(new Uint8Array([0, 0, 0, 0, 1])).bytes.slice()
+  console.log(unpack(new Uint8Array([8])).bytes.slice())
+  const bbb = pack_right(unpack(new Uint8Array([8])).bytes.slice()).bytes.slice()
   assert(equals(aaa, bbb))
 })
 
-test("Ambiguous", async ({ test }) => {
+await test("Ambiguous", async ({ test }) => {
   const ambiguous = new Uint8Array([
     1, 1, 1, 0,
     1, 1, 1, 1,
@@ -43,41 +49,39 @@ test("Ambiguous", async ({ test }) => {
     0, 0, 0, 1,
   ])
 
-  assert(equals(unpack(pack_right(ambiguous)), unambiguous_right), `pack_right`)
-  assert(equals(unpack(pack_left(ambiguous)), unambiguous_left), `pack_left`)
+  assert(equals(unpack(pack_right(ambiguous).bytes.slice()).bytes.slice(), unambiguous_right), `pack_right`)
+  assert(equals(unpack(pack_left(ambiguous).bytes.slice()).bytes.slice(), unambiguous_left), `pack_left`)
 })
 
-test("Unpack and pack", async () => {
+await test("Unpack and pack", async () => {
 
   assert(equals(
-    pack_right(new Uint8Array([0, 0, 0, 0, 1])),
-    pack_right(unpack(new Uint8Array([8])))
+    pack_right(new Uint8Array([0, 0, 0, 0, 1])).bytes.slice(),
+    pack_right(unpack(new Uint8Array([8])).bytes.slice()).bytes.slice()
   ))
 
   const packed = new Uint8Array([0b00111001, 0b11001100])
-  const unpacked = unpack(packed)
+  const unpacked = unpack(packed).bytes.slice()
 
   const sliceBits = unpacked.subarray(2, 2 + 3)
-  const sliceBytes = pack_left(sliceBits)
+  const sliceBytes = pack_left(sliceBits).bytes.slice()
   const sliceUint8 = new DataView(sliceBytes.buffer).getUint8(0)
 
   assert(sliceUint8 === 7)
 })
 
-test("xor_mod", async () => {
+await test("xor_mod", async () => {
   const bytes = new Uint8Array(1024)
   crypto.getRandomValues(bytes)
 
   const mask = new Uint8Array(4)
   crypto.getRandomValues(mask)
 
-  const original = new Uint8Array(bytes)
+  const xored = xor_mod(bytes, mask).bytes.slice()
 
-  xor_mod(bytes, mask)
+  assert(!equals(bytes, xored), "lol")
 
-  assert(!equals(bytes, original))
+  const unxored = xor_mod(xored, mask).bytes.slice()
 
-  xor_mod(bytes, mask)
-
-  assert(equals(bytes, original))
+  assert(equals(bytes, unxored))
 })

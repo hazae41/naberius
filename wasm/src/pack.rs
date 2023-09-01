@@ -1,15 +1,21 @@
 extern crate alloc;
 
+use alloc::vec::Vec;
+
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-pub unsafe fn pack_right_unsafe(bits: &[u8], bytes: &mut [u8]) {
+pub unsafe fn pack_right(bits: &[u8]) -> Vec<u8> {
+    let length = (bits.len() + 8 - 1) / 8;
+
+    let mut bytes = Vec::<u8>::with_capacity(length);
+
     let mut bit = bits.as_ptr();
     let mut byte = bytes.as_mut_ptr();
 
-    let r = bits.len() % 8;
+    let remainder = bits.len() % 8;
 
-    while bit < bits.as_ptr().add(bits.len()).sub(r) {
+    while bit < bits.as_ptr().add(bits.len()).sub(remainder) {
         let mut k: usize = 0;
         while k < 8 {
             *byte = (*byte << 1) | *bit;
@@ -19,9 +25,9 @@ pub unsafe fn pack_right_unsafe(bits: &[u8], bytes: &mut [u8]) {
         byte = byte.add(1);
     }
 
-    if r > 0 {
+    if remainder > 0 {
         let mut k: usize = 0;
-        while k < r {
+        while k < remainder {
             *byte = (*byte << 1) | *bit;
             bit = bit.add(1);
             k += 1;
@@ -31,10 +37,18 @@ pub unsafe fn pack_right_unsafe(bits: &[u8], bytes: &mut [u8]) {
             k += 1;
         }
     }
+
+    bytes.set_len(length);
+
+    return bytes;
 }
 
 #[wasm_bindgen]
-pub unsafe fn pack_left_unsafe(bits: &[u8], bytes: &mut [u8]) {
+pub unsafe fn pack_left(bits: &[u8]) -> Vec<u8> {
+    let length = (bits.len() + 8 - 1) / 8;
+
+    let mut bytes = Vec::<u8>::with_capacity(length);
+
     let mut bit = bits.as_ptr();
     let mut byte = bytes.as_mut_ptr();
 
@@ -57,4 +71,8 @@ pub unsafe fn pack_left_unsafe(bits: &[u8], bytes: &mut [u8]) {
         }
         byte = byte.add(1);
     }
+
+    bytes.set_len(length);
+
+    return bytes;
 }
