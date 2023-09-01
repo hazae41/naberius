@@ -1,6 +1,6 @@
 export * from "../../../wasm/pkg/naberius.js";
 
-import { InitOutput, Slice, WASM_VECTOR_LEN, __wbg_init, pack_left_unsafe, pack_right_unsafe, passArray8ToWasm0, wasm } from "../../../wasm/pkg/naberius.js";
+import { InitOutput, Slice, WASM_VECTOR_LEN, __wbg_init, getUint8Memory0, passArray8ToWasm0, wasm } from "../../../wasm/pkg/naberius.js";
 import { data } from "../../../wasm/pkg/naberius.wasm.js";
 
 let output: InitOutput | undefined = undefined
@@ -9,8 +9,10 @@ export async function initBundledOnce() {
   return output ??= await __wbg_init(data)
 }
 
-function alloc(len: number): number {
-  return wasm.__wbindgen_malloc(len * 1, 1) >>> 0
+function alloc(length: number): number {
+  const ptr = wasm.__wbindgen_malloc(length, 1) >>> 0
+  getUint8Memory0().fill(0, ptr, ptr + length)
+  return ptr
 }
 
 /**
@@ -27,7 +29,7 @@ export function unpack(bytes: Uint8Array) {
   const ptr1 = alloc(length);
   const len1 = length;
 
-  wasm.unpack_unsafe(ptr0, len0, ptr1, len1)
+  wasm.unpack_unsafe(ptr0, len0, ptr1, len1, 0)
   return new Slice(ptr1, len1)
 }
 
@@ -37,10 +39,16 @@ export function unpack(bytes: Uint8Array) {
  * @returns 
  */
 export function pack_left(bits: Uint8Array) {
-  const length = (bits.length + 8 - 1) / 8;
-  const bytes = new Uint8Array(length)
-  pack_left_unsafe(bits, bytes)
-  return bytes
+  const length = Math.ceil(bits.length / 8)
+
+  const ptr0 = passArray8ToWasm0(bits, wasm.__wbindgen_malloc);
+  const len0 = WASM_VECTOR_LEN;
+
+  const ptr1 = alloc(length);
+  const len1 = length;
+
+  wasm.pack_left_unsafe(ptr0, len0, ptr1, len1, 0);
+  return new Slice(ptr1, len1)
 }
 
 /**
@@ -49,7 +57,23 @@ export function pack_left(bits: Uint8Array) {
  * @returns 
  */
 export function pack_right(bits: Uint8Array) {
-  const length = Math.ceil(bits.length / 8);
-  const bytes = new Uint8Array(length)
-  return pack_right_unsafe(bits, bytes) as any as Uint8Array
+  const length = Math.ceil(bits.length / 8)
+
+  const ptr0 = passArray8ToWasm0(bits, wasm.__wbindgen_malloc);
+  const len0 = WASM_VECTOR_LEN;
+
+  const ptr1 = alloc(length);
+  const len1 = length;
+
+  wasm.pack_right_unsafe(ptr0, len0, ptr1, len1, 0);
+  return new Slice(ptr1, len1)
+}
+
+export function xor_mod(bytes: Uint8Array, mask: Uint8Array) {
+  const ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
+  const len0 = WASM_VECTOR_LEN;
+  const ptr1 = passArray8ToWasm0(mask, wasm.__wbindgen_malloc);
+  const len1 = WASM_VECTOR_LEN;
+  wasm.xor_mod_unsafe(ptr0, len0, 0, ptr1, len1);
+  return new Slice(ptr0, len0)
 }

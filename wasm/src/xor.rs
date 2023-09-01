@@ -1,10 +1,9 @@
 extern crate alloc;
 
-use alloc::vec::Vec;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-pub unsafe fn xor_mod(mut bytes: Vec<u8>, mask: &[u8]) {
+pub unsafe fn xor_mod_unsafe(bytes: &mut [u8], mask: &[u8]) {
     let mut i = 0;
 
     while i < bytes.len() {

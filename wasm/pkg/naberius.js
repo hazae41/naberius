@@ -9,6 +9,31 @@ export function getUint8Memory0() {
     return cachedUint8Memory0;
 }
 
+function getArrayU8FromWasm0(ptr, len) {
+    ptr = ptr >>> 0;
+    return getUint8Memory0().subarray(ptr / 1, ptr / 1 + len);
+}
+
+const heap = new Array(128).fill(undefined);
+
+heap.push(undefined, null, true, false);
+
+function getObject(idx) { return heap[idx]; }
+
+let heap_next = heap.length;
+
+function dropObject(idx) {
+    if (idx < 132) return;
+    heap[idx] = heap_next;
+    heap_next = idx;
+}
+
+function takeObject(idx) {
+    const ret = getObject(idx);
+    dropObject(idx);
+    return ret;
+}
+
 export let WASM_VECTOR_LEN = 0;
 
 export function passArray8ToWasm0(arg, malloc) {
@@ -17,30 +42,15 @@ export function passArray8ToWasm0(arg, malloc) {
     WASM_VECTOR_LEN = arg.length;
     return ptr;
 }
-/**
-* @param {Uint8Array} bytes
-* @param {Uint8Array} mask
-*/
-export function xor_mod(bytes, mask) {
-    const ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ptr1 = passArray8ToWasm0(mask, wasm.__wbindgen_malloc);
-    const len1 = WASM_VECTOR_LEN;
-    wasm.xor_mod(ptr0, len0, ptr1, len1);
-}
 
-/**
-* @param {Uint8Array} bytes
-* @param {Uint8Array} bits
-*/
-export function unpack_unsafe(bytes, bits) {
-    const ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ptr1 = passArray8ToWasm0(bits, wasm.__wbindgen_malloc);
-    const len1 = WASM_VECTOR_LEN;
-    wasm.unpack_unsafe(ptr0, len0, ptr1, len1);
-}
+function addHeapObject(obj) {
+    if (heap_next === heap.length) heap.push(heap.length + 1);
+    const idx = heap_next;
+    heap_next = heap[idx];
 
+    heap[idx] = obj;
+    return idx;
+}
 /**
 * @param {Uint8Array} bits
 * @param {Uint8Array} bytes
@@ -48,9 +58,9 @@ export function unpack_unsafe(bytes, bits) {
 export function pack_right_unsafe(bits, bytes) {
     const ptr0 = passArray8ToWasm0(bits, wasm.__wbindgen_malloc);
     const len0 = WASM_VECTOR_LEN;
-    const ptr1 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
-    const len1 = WASM_VECTOR_LEN;
-    wasm.pack_right_unsafe(ptr0, len0, ptr1, len1);
+    var ptr1 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
+    var len1 = WASM_VECTOR_LEN;
+    wasm.pack_right_unsafe(ptr0, len0, ptr1, len1, addHeapObject(bytes));
 }
 
 /**
@@ -60,9 +70,33 @@ export function pack_right_unsafe(bits, bytes) {
 export function pack_left_unsafe(bits, bytes) {
     const ptr0 = passArray8ToWasm0(bits, wasm.__wbindgen_malloc);
     const len0 = WASM_VECTOR_LEN;
-    const ptr1 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
+    var ptr1 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
+    var len1 = WASM_VECTOR_LEN;
+    wasm.pack_left_unsafe(ptr0, len0, ptr1, len1, addHeapObject(bytes));
+}
+
+/**
+* @param {Uint8Array} bytes
+* @param {Uint8Array} mask
+*/
+export function xor_mod_unsafe(bytes, mask) {
+    var ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
+    var len0 = WASM_VECTOR_LEN;
+    const ptr1 = passArray8ToWasm0(mask, wasm.__wbindgen_malloc);
     const len1 = WASM_VECTOR_LEN;
-    wasm.pack_left_unsafe(ptr0, len0, ptr1, len1);
+    wasm.xor_mod_unsafe(ptr0, len0, addHeapObject(bytes), ptr1, len1);
+}
+
+/**
+* @param {Uint8Array} bytes
+* @param {Uint8Array} bits
+*/
+export function unpack_unsafe(bytes, bits) {
+    const ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
+    const len0 = WASM_VECTOR_LEN;
+    var ptr1 = passArray8ToWasm0(bits, wasm.__wbindgen_malloc);
+    var len1 = WASM_VECTOR_LEN;
+    wasm.unpack_unsafe(ptr0, len0, ptr1, len1, addHeapObject(bits));
 }
 
 async function __wbg_load(module, imports) {
@@ -99,6 +133,12 @@ async function __wbg_load(module, imports) {
 function __wbg_get_imports() {
     const imports = {};
     imports.wbg = {};
+    imports.wbg.__wbindgen_copy_to_typed_array = function(arg0, arg1, arg2) {
+        
+    };
+    imports.wbg.__wbindgen_object_drop_ref = function(arg0) {
+        takeObject(arg0);
+    };
 
     return imports;
 }
