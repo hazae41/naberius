@@ -13,11 +13,16 @@ npm i @hazae41/naberius
 
 [**Node Package 📦**](https://www.npmjs.com/package/@hazae41/naberius) • [**Deno Module 🦖**](https://deno.land/x/naberius)
 
-## Features
+## Algorithms
 - unpack: transform an array of bytes to an array of bits (aka bitfield)
 - pack_left: transform an array of bits to a left-padded array of bytes
 - pack_right: transform an array of bits to a right-padded array of bytes
 - xor_mod: apply in-place XOR to an array of bytes using a mask
+
+## Features
+- Reproducible building
+- Pre-bundled and streamed
+- Zero-copy memory slices
 
 ## Benchmarks
 
@@ -173,7 +178,16 @@ const fullBytes = pack_right(fullBits).copy()
 
 ### Xoring with mask
 
+```tsx
+const bytes = new Uint8Array(1024)
+crypto.getRandomValues(bytes)
 
+const mask = new Uint8Array(4)
+crypto.getRandomValues(mask)
+
+const xored = xor_mod(bytes, mask).copy()
+const unxored = xor_mod(xored, mask).copy()
+```
 
 ## Building
 
