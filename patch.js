@@ -5,14 +5,14 @@ const wasm = readFileSync("./wasm/pkg/naberius_bg.wasm")
 writeFileSync(`./wasm/pkg/naberius.wasm.js`, `export const data = "data:application/wasm;base64,${wasm.toString("base64")}";`);
 writeFileSync(`./wasm/pkg/naberius.wasm.d.ts`, `export const data: string;`);
 
-const script = readFileSync(`./wasm/pkg/naberius.js`, "utf8")
+const glueJs = readFileSync(`./wasm/pkg/naberius.js`, "utf8")
   .replace("async function __wbg_init", "export async function __wbg_init")
   .replace("input = new URL('naberius_bg.wasm', import.meta.url);", "throw new Error();")
   .replaceAll("getArrayU8FromWasm0(r0, r1).slice()", "new Slice(r0, r1)")
   .replaceAll("wasm.__wbindgen_free(r0, r1 * 1)", "")
   .replaceAll("@returns {Uint8Array}", "@returns {Slice}")
 
-const typing = readFileSync(`./wasm/pkg/naberius.d.ts`, "utf8")
+const glueTs = readFileSync(`./wasm/pkg/naberius.d.ts`, "utf8")
   .replace("export default function __wbg_init", "export function __wbg_init")
   .replaceAll("@returns {Uint8Array}", "@returns {Slice}")
   .replaceAll(": Uint8Array;", ": Slice;")
@@ -106,7 +106,7 @@ export class Slice {
 
 }`
 
-writeFileSync(`./wasm/pkg/naberius.js`, script + patchJs)
-writeFileSync(`./wasm/pkg/naberius.d.ts`, typing + patchTs)
+writeFileSync(`./wasm/pkg/naberius.js`, glueJs + patchJs)
+writeFileSync(`./wasm/pkg/naberius.d.ts`, glueTs + patchTs)
 
 rmSync(`./wasm/pkg/.gitignore`, { force: true });
