@@ -14,8 +14,8 @@ function equals(a: Uint8Array, b: Uint8Array) {
 await initBundledOnce()
 
 test("Unpack and pack", async () => {
-  const aaa = pack_right(new Uint8Array([0, 0, 0, 0, 1])).read()
-  const bbb = pack_right(unpack(new Uint8Array([8])).read()).read()
+  const aaa = pack_right(new Uint8Array([0, 0, 0, 0, 1])).copy()
+  const bbb = pack_right(unpack(new Uint8Array([8])).copy()).copy()
   assert(equals(aaa, bbb))
 })
 
@@ -40,22 +40,22 @@ test("Ambiguous", async ({ test }) => {
     0, 0, 0, 1,
   ])
 
-  assert(equals(unpack(pack_right(ambiguous).read()).read(), unambiguous_right), `pack_right`)
-  assert(equals(unpack(pack_left(ambiguous).read()).read(), unambiguous_left), `pack_left`)
+  assert(equals(unpack(pack_right(ambiguous).copy()).copy(), unambiguous_right), `pack_right`)
+  assert(equals(unpack(pack_left(ambiguous).copy()).copy(), unambiguous_left), `pack_left`)
 })
 
 test("Unpack and pack", async () => {
 
   assert(equals(
-    pack_right(new Uint8Array([0, 0, 0, 0, 1])).read(),
-    pack_right(unpack(new Uint8Array([8])).read()).read()
+    pack_right(new Uint8Array([0, 0, 0, 0, 1])).copy(),
+    pack_right(unpack(new Uint8Array([8])).copy()).copy()
   ))
 
   const packed = new Uint8Array([0b00111001, 0b11001100])
-  const unpacked = unpack(packed).read()
+  const unpacked = unpack(packed).copy()
 
   const first = unpacked.subarray(2, 2 + 3)
-  const firstb = new DataView(pack_left(first).read().buffer)
+  const firstb = new DataView(pack_left(first).copy().buffer)
   const firstn = firstb.getUint8(0)
 
   assert(firstn === 7)

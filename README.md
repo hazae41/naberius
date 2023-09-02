@@ -168,7 +168,7 @@ fullBits.set(bodyBitsSlice.bytes, headerBits.length)
 bodyBitsSlice.free()
 
 // Pack adding 0-padding to the right
-const fullBytes = pack_right(fullBits).read()
+const fullBytes = pack_right(fullBits).copy()
 ```
 
 ### Xoring with mask
