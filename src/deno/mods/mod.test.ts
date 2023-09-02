@@ -40,8 +40,6 @@ test("Ambiguous", async ({ test }) => {
     0, 0, 0, 1,
   ])
 
-  console.log(unpack(pack_left(ambiguous).read()).read())
-
   assert(equals(unpack(pack_right(ambiguous).read()).read(), unambiguous_right), `pack_right`)
   assert(equals(unpack(pack_left(ambiguous).read()).read(), unambiguous_left), `pack_left`)
 })

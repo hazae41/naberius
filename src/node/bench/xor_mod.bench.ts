@@ -19,7 +19,7 @@ const mask = new Uint8Array(4)
 crypto.getRandomValues(mask)
 
 const resultWasm = benchSync("wasm", () => {
-  const slice = xor_mod(bytes, mask).read()
+  xor_mod(bytes, mask).free()
 }, { samples })
 
 const resultJs = benchSync("js", () => {

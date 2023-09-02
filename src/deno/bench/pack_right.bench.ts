@@ -1,20 +1,20 @@
-import { initSyncBundledOnce, pack_right, unpack } from "../mod.ts";
+import { initBundledOnce, pack_right, unpack } from "../mod.ts";
 
-initSyncBundledOnce()
+await initBundledOnce()
 
 const group = "pack_right"
 
 const packed = new Uint8Array(1025)
 crypto.getRandomValues(packed)
 
-const unpacked = unpack(packed).subarray(0, -4)
+const unpacked = unpack(packed).read().subarray(0, -4)
 
 let unpackedString = ""
 
 unpacked.forEach(x => unpackedString += x.toString())
 
 Deno.bench("wasm", { group, baseline: true }, () => {
-  pack_right(unpacked)
+  pack_right(unpacked).free()
 })
 
 Deno.bench("js (array)", { group }, () => {
