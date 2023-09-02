@@ -158,16 +158,22 @@ const bodyBytes = new Uint8Array(256)
 crypto.getRandomValues(bodyBytes)
 
 // Unpack it
-const bodyBits = unpack(bodyBytes)
+const bodyBitsSlice = unpack(bodyBytes)
 
 // Concat both bits arrays
-const fullBits = new Uint8Array(headerBits.length + bodyBits.length)
+const fullBits = new Uint8Array(headerBits.length + bodyBitsSlice.bytes.length)
 fullBits.set(headerBits, 0)
-fullBits.set(bodyBits, headerBits.length)
+fullBits.set(bodyBitsSlice.bytes, headerBits.length)
+
+bodyBitsSlice.free()
 
 // Pack adding 0-padding to the right
-const fullBytes = pack_right(fullBits)
+const fullBytes = pack_right(fullBits).read()
 ```
+
+### Xoring with mask
+
+
 
 ## Building
 

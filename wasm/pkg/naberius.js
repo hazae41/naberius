@@ -240,4 +240,12 @@ export class Slice {
     return bytes
   }
 
+  [Symbol.dispose]() {
+    this.free()
+  }
+
+  dispose() {
+    this.free()
+  }
+
 }

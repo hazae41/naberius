@@ -54,6 +54,20 @@ export class Slice {
     return bytes
   }
 
+  /**
+   * @returns {void}
+   **/
+  [Symbol.dispose]() {
+    this.free()
+  }
+
+  /**
+   * @returns {void}
+   **/
+  dispose() {
+    this.free()
+  }
+
 }`
 
 const patchTs = `
@@ -79,6 +93,16 @@ export class Slice {
    * Copy the bytes and free them
    **/
   read(): Uint8Array
+
+  /**
+   * Free the bytes
+   **/
+  [Symbol.dispose](): void
+
+  /**
+   * Free the bytes
+   **/
+  dispose(): void
 
 }`
 
