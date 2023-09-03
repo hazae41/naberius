@@ -3,7 +3,7 @@
   "collaborators": [
     "hazae41 <hazae41@proton.me>"
   ],
-  "description": "WebAssembly bits processing utilities.",
+  "description": "WebAssembly bits processing utilities",
   "version": "1.0.0",
   "license": "MIT",
   "repository": {
