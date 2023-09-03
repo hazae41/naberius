@@ -84,9 +84,4 @@ export class Slice {
    **/
   [Symbol.dispose](): void
 
-  /**
-   * Free the bytes
-   **/
-  dispose(): void
-
 }
