@@ -7,7 +7,7 @@ const group = "pack_right"
 const packed = new Uint8Array(1025)
 crypto.getRandomValues(packed)
 
-const unpacked = unpack(packed).copy().subarray(0, -4)
+const unpacked = unpack(packed).copyAndDispose().subarray(0, -4)
 
 let unpackedString = ""
 

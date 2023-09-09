@@ -21,9 +21,9 @@ function equals(a: Uint8Array, b: Uint8Array) {
 await initBundledOnce()
 
 await test("Unpack and pack", async () => {
-  const aaa = pack_right(new Uint8Array([0, 0, 0, 0, 1])).copy()
+  const aaa = pack_right(new Uint8Array([0, 0, 0, 0, 1])).copyAndDispose()
   console.log(unpack(new Uint8Array([8])))
-  const bbb = pack_right(unpack(new Uint8Array([8])).copy()).copy()
+  const bbb = pack_right(unpack(new Uint8Array([8])).copyAndDispose()).copyAndDispose()
   assert(equals(aaa, bbb))
 })
 
@@ -48,22 +48,22 @@ await test("Ambiguous", async ({ test }) => {
     0, 0, 0, 1,
   ])
 
-  assert(equals(unpack(pack_right(ambiguous).copy()).copy(), unambiguous_right), `pack_right`)
-  assert(equals(unpack(pack_left(ambiguous).copy()).copy(), unambiguous_left), `pack_left`)
+  assert(equals(unpack(pack_right(ambiguous).copyAndDispose()).copyAndDispose(), unambiguous_right), `pack_right`)
+  assert(equals(unpack(pack_left(ambiguous).copyAndDispose()).copyAndDispose(), unambiguous_left), `pack_left`)
 })
 
 await test("Unpack and pack", async () => {
 
   assert(equals(
-    pack_right(new Uint8Array([0, 0, 0, 0, 1])).copy(),
-    pack_right(unpack(new Uint8Array([8])).copy()).copy()
+    pack_right(new Uint8Array([0, 0, 0, 0, 1])).copyAndDispose(),
+    pack_right(unpack(new Uint8Array([8])).copyAndDispose()).copyAndDispose()
   ))
 
   const packed = new Uint8Array([0b00111001, 0b11001100])
-  const unpacked = unpack(packed).copy()
+  const unpacked = unpack(packed).copyAndDispose()
 
   const sliceBits = unpacked.subarray(2, 2 + 3)
-  const sliceBytes = pack_left(sliceBits).copy()
+  const sliceBytes = pack_left(sliceBits).copyAndDispose()
   const sliceUint8 = new DataView(sliceBytes.buffer).getUint8(0)
 
   assert(sliceUint8 === 7)
@@ -76,11 +76,11 @@ await test("xor_mod", async () => {
   const mask = new Uint8Array(4)
   crypto.getRandomValues(mask)
 
-  const xored = xor_mod(bytes, mask).copy()
+  const xored = xor_mod(bytes, mask).copyAndDispose()
 
   assert(!equals(bytes, xored))
 
-  const unxored = xor_mod(xored, mask).copy()
+  const unxored = xor_mod(xored, mask).copyAndDispose()
 
   assert(equals(bytes, unxored))
 })

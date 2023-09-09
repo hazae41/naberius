@@ -173,7 +173,7 @@ fullBits.set(bodyBitsSlice.bytes, headerBits.length)
 bodyBitsSlice.free()
 
 // Pack adding 0-padding to the right
-const fullBytes = pack_right(fullBits).copy()
+const fullBytes = pack_right(fullBits).copyAndDispose()
 ```
 
 ### Xoring with mask
@@ -185,8 +185,8 @@ crypto.getRandomValues(bytes)
 const mask = new Uint8Array(4)
 crypto.getRandomValues(mask)
 
-const xored = xor_mod(bytes, mask).copy()
-const unxored = xor_mod(xored, mask).copy()
+const xored = xor_mod(bytes, mask).copyAndDispose()
+const unxored = xor_mod(xored, mask).copyAndDispose()
 ```
 
 ## Building
