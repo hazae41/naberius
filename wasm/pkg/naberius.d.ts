@@ -76,11 +76,17 @@ export class Slice {
 
   /**
    * Get the bytes in memory
+   * @throws if freed
    **/
   get bytes(): Uint8Array
 
   /**
-   * Free the bytes
+   * Is the memory freed?
+   **/
+  get freed(): boolean
+
+  /**
+   * Free the bytes (do nothing if already freed)
    **/
   free(): void
 

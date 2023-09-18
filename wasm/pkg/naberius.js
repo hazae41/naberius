@@ -216,6 +216,8 @@ export default __wbg_init;
 
 export class Slice {
 
+  #freed = false
+
   /**
    * @param {number} ptr 
    * @param {number} len 
@@ -238,13 +240,22 @@ export class Slice {
    * @returns {Uint8Array}
    **/
   get bytes() {
+    if (this.#freed)
+      throw new Error("Freed")
     return getUint8Memory0().subarray(this.start, this.end)
+  }
+
+  get freed() {
+    return this.#freed
   }
 
   /**
    * @returns {void}
    **/
   free() {
+    if (this.#freed)
+      return
+    this.#freed = true
     wasm.__wbindgen_free(this.ptr, this.len * 1);
   }
 
