@@ -14,7 +14,13 @@ function getUint8Memory0() {
 
 let WASM_VECTOR_LEN = 0;
 
+
 function passArray8ToWasm0(arg, malloc) {
+    if (getUint8Memory0().buffer === arg.buffer) {
+      WASM_VECTOR_LEN = arg.byteLength;
+      return arg.byteOffset
+    }
+
     const ptr = malloc(arg.length * 1, 1) >>> 0;
     getUint8Memory0().set(arg, ptr / 1);
     WASM_VECTOR_LEN = arg.length;
