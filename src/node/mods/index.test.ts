@@ -1,3 +1,4 @@
+import { Box, Copied } from "@hazae41/box";
 import { assert, test } from "@hazae41/phobos";
 import { relative, resolve } from "path";
 import { initBundledOnce, pack_left, pack_right, unpack, xor_mod } from "./index.js";
@@ -21,9 +22,8 @@ function equals(a: Uint8Array, b: Uint8Array) {
 await initBundledOnce()
 
 await test("Unpack and pack", async () => {
-  const aaa = pack_right(new Uint8Array([0, 0, 0, 0, 1])).copyAndDispose()
-  console.log(unpack(new Uint8Array([8])))
-  const bbb = pack_right(unpack(new Uint8Array([8])).copyAndDispose()).copyAndDispose()
+  const aaa = pack_right(new Box(new Copied(new Uint8Array([0, 0, 0, 0, 1])))).copyAndDispose().bytes
+  const bbb = pack_right(new Box(unpack(new Box(new Copied(new Uint8Array([8])))).copyAndDispose())).copyAndDispose().bytes
   assert(equals(aaa, bbb))
 })
 
@@ -48,22 +48,22 @@ await test("Ambiguous", async ({ test }) => {
     0, 0, 0, 1,
   ])
 
-  assert(equals(unpack(pack_right(ambiguous).copyAndDispose()).copyAndDispose(), unambiguous_right), `pack_right`)
-  assert(equals(unpack(pack_left(ambiguous).copyAndDispose()).copyAndDispose(), unambiguous_left), `pack_left`)
+  assert(equals(unpack(new Box(pack_right(new Box(new Copied(ambiguous))).copyAndDispose())).copyAndDispose().bytes, unambiguous_right), `pack_right`)
+  assert(equals(unpack(new Box(pack_left(new Box(new Copied(ambiguous))).copyAndDispose())).copyAndDispose().bytes, unambiguous_left), `pack_left`)
 })
 
 await test("Unpack and pack", async () => {
 
   assert(equals(
-    pack_right(new Uint8Array([0, 0, 0, 0, 1])).copyAndDispose(),
-    pack_right(unpack(new Uint8Array([8])).copyAndDispose()).copyAndDispose()
+    pack_right(new Box(new Copied(new Uint8Array([0, 0, 0, 0, 1])))).copyAndDispose().bytes,
+    pack_right(new Box(unpack(new Box(new Copied(new Uint8Array([8])))).copyAndDispose())).copyAndDispose().bytes
   ))
 
   const packed = new Uint8Array([0b00111001, 0b11001100])
-  const unpacked = unpack(packed).copyAndDispose()
+  const unpacked = unpack(new Box(new Copied(packed))).copyAndDispose().bytes
 
   const sliceBits = unpacked.subarray(2, 2 + 3)
-  const sliceBytes = pack_left(sliceBits).copyAndDispose()
+  const sliceBytes = pack_left(new Box(new Copied(sliceBits))).copyAndDispose().bytes
   const sliceUint8 = new DataView(sliceBytes.buffer).getUint8(0)
 
   assert(sliceUint8 === 7)
@@ -76,11 +76,11 @@ await test("xor_mod", async () => {
   const mask = new Uint8Array(4)
   crypto.getRandomValues(mask)
 
-  const xored = xor_mod(bytes, mask).copyAndDispose()
+  const xored = xor_mod(new Box(new Copied(bytes)), new Box(new Copied(mask))).copyAndDispose()
 
-  assert(!equals(bytes, xored))
+  assert(!equals(bytes, xored.bytes))
 
-  const unxored = xor_mod(xored, mask).copyAndDispose()
+  const unxored = xor_mod(new Box(xored), new Box(new Copied(mask))).copyAndDispose()
 
-  assert(equals(bytes, unxored))
+  assert(equals(bytes, unxored.bytes))
 })

@@ -1,5 +1,5 @@
 
-import { Ok } from "@hazae41/result"
+import { Copied } from "@hazae41/box"
 
 let wasm;
 
@@ -14,16 +14,17 @@ function getUint8Memory0() {
 
 let WASM_VECTOR_LEN = 0;
 
-
 function passArray8ToWasm0(arg, malloc) {
-    if (getUint8Memory0().buffer === arg.buffer) {
-      WASM_VECTOR_LEN = arg.byteLength;
-      return arg.byteOffset
+    if (getUint8Memory0().buffer === arg.inner.bytes.buffer) {
+      const bytes = arg.unwrap().bytes
+      WASM_VECTOR_LEN = bytes.byteLength;
+      return bytes.byteOffset
     }
 
-    const ptr = malloc(arg.length * 1, 1) >>> 0;
-    getUint8Memory0().set(arg, ptr / 1);
-    WASM_VECTOR_LEN = arg.length;
+    const bytes = arg.get().bytes
+    const ptr = malloc(bytes.length * 1, 1) >>> 0;
+    getUint8Memory0().set(bytes, ptr / 1);
+    WASM_VECTOR_LEN = bytes.length;
     return ptr;
 }
 
@@ -41,7 +42,7 @@ function getArrayU8FromWasm0(ptr, len) {
     return getUint8Memory0().subarray(ptr / 1, ptr / 1 + len);
 }
 /**
-* @param {Uint8Array} bits
+* @param {Box<Copiable>} bits
 * @returns {Slice}
 */
 export function pack_right(bits) {
@@ -61,7 +62,7 @@ export function pack_right(bits) {
 }
 
 /**
-* @param {Uint8Array} bits
+* @param {Box<Copiable>} bits
 * @returns {Slice}
 */
 export function pack_left(bits) {
@@ -81,8 +82,8 @@ export function pack_left(bits) {
 }
 
 /**
-* @param {Uint8Array} bytes
-* @param {Uint8Array} mask
+* @param {Box<Copiable>} bytes
+* @param {Box<Copiable>} mask
 * @returns {Slice}
 */
 export function xor_mod(bytes, mask) {
@@ -104,7 +105,7 @@ export function xor_mod(bytes, mask) {
 }
 
 /**
-* @param {Uint8Array} bytes
+* @param {Box<Copiable>} bytes
 * @returns {Slice}
 */
 export function unpack(bytes) {
@@ -240,8 +241,6 @@ export class Slice {
    * @returns {Uint8Array}
    **/
   get bytes() {
-    if (this.#freed)
-      throw new Error("Freed")
     return getUint8Memory0().subarray(this.start, this.end)
   }
 
@@ -260,27 +259,12 @@ export class Slice {
   }
 
   /**
-   * @returns {Uint8Array}
+   * @returns {Copied}
    **/
   copyAndDispose() {
     const bytes = this.bytes.slice()
     this.free()
-    return bytes
-  }
-
-  /**
-   * @returns {Result<number,never>}
-   */
-  trySize() {
-    return new Ok(this.len)
-  }
-
-  /**
-   * @param {Cursor} cursor 
-   * @returns {Result<void, CursorWriteError>}
-   */
-  tryWrite(cursor) {
-    return cursor.tryWrite(this.bytes)
+    return new Copied(bytes)
   }
 
 }

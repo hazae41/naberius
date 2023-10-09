@@ -1,6 +1,5 @@
 
-import type { Result } from "@hazae41/result"
-import type { Cursor, CursorWriteError } from "@hazae41/cursor"
+import type { Box, Copiable, Copied } from "@hazae41/box"
 
 /* tslint:disable */
 /* eslint-disable */
@@ -8,23 +7,23 @@ import type { Cursor, CursorWriteError } from "@hazae41/cursor"
 * @param {Uint8Array} bits
 * @returns {Slice}
 */
-export function pack_right(bits: Uint8Array): Slice;
+export function pack_right(bits: Box<Copiable>): Slice;
 /**
 * @param {Uint8Array} bits
 * @returns {Slice}
 */
-export function pack_left(bits: Uint8Array): Slice;
+export function pack_left(bits: Box<Copiable>): Slice;
 /**
 * @param {Uint8Array} bytes
 * @param {Uint8Array} mask
 * @returns {Slice}
 */
-export function xor_mod(bytes: Uint8Array, mask: Uint8Array): Slice;
+export function xor_mod(bytes: Box<Copiable>, mask: Box<Copiable>): Slice;
 /**
 * @param {Uint8Array} bytes
 * @returns {Slice}
 */
-export function unpack(bytes: Uint8Array): Slice;
+export function unpack(bytes: Box<Copiable>): Slice;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
@@ -76,7 +75,6 @@ export class Slice {
 
   /**
    * Get the bytes in memory
-   * @throws if freed
    **/
   get bytes(): Uint8Array
 
@@ -93,10 +91,6 @@ export class Slice {
   /**
    * Copy the bytes and free them
    **/
-  copyAndDispose(): Uint8Array
-
-  trySize(): Result<number, never>
-
-  tryWrite(cursor: Cursor): Result<void, CursorWriteError>
+  copyAndDispose(): Copied
 
 }
