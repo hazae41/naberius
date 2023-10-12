@@ -1,7 +1,6 @@
-import { Box, Copied } from "@hazae41/box";
 import { benchSync } from "@hazae41/deimos";
 import crypto from "crypto";
-import { initBundledOnce, unpack } from "mods/index.js";
+import { Memory, initBundledOnce, unpack } from "mods/index.js";
 import { cpus } from "os";
 import { relative, resolve } from "path";
 
@@ -15,10 +14,10 @@ const samples = 10_000
 
 const packed = new Uint8Array(1024)
 crypto.getRandomValues(packed)
-const box = new Box(new Copied(packed))
+const mpacked = new Memory(packed)
 
 const resultWasm = benchSync("wasm", () => {
-  unpack(box).free()
+  unpack(mpacked).free()
 }, { samples })
 
 const resultJsArray = benchSync("js (array)", () => {

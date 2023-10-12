@@ -1,7 +1,6 @@
-import { Box, Copied } from "@hazae41/box";
 import { benchSync } from "@hazae41/deimos";
 import crypto from "crypto";
-import { initBundledOnce, pack_right, unpack } from "mods/index.js";
+import { Memory, initBundledOnce, pack_right, unpack } from "mods/index.js";
 import { cpus } from "os";
 import { relative, resolve } from "path";
 
@@ -15,17 +14,19 @@ const samples = 10_000
 
 const packed = new Uint8Array(1025)
 crypto.getRandomValues(packed)
-const packedBox = new Box(new Copied(packed))
+const mpacked = new Memory(packed)
 
-const unpacked = unpack(packedBox).bytes.slice(0, -4)
-const unpackedBox = new Box(new Copied(unpacked))
+const munpacked = unpack(mpacked)
+const unpacked = munpacked.bytes
+
+mpacked.free()
 
 let unpackedString = ""
 
 unpacked.forEach(x => unpackedString += x.toString())
 
 const resultWasm = benchSync("wasm", () => {
-  pack_right(unpackedBox).free()
+  pack_right(munpacked).free()
 }, { samples })
 
 const resultJsArray = benchSync("js (array)", () => {

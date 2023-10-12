@@ -1,16 +1,16 @@
 extern crate alloc;
 
-use alloc::vec::Vec;
 use wasm_bindgen::prelude::*;
 
+use crate::Memory;
+
 #[wasm_bindgen]
-pub unsafe fn xor_mod(mut bytes: Vec<u8>, mask: &[u8]) -> Vec<u8> {
+pub unsafe fn xor_mod(bytes: &mut Memory, mask: &Memory) -> () {
     let mut i = 0;
 
     while i < bytes.len() {
-        *bytes.get_unchecked_mut(i) = bytes.get_unchecked(i) ^ mask.get_unchecked(i % mask.len());
+        *bytes.inner.get_unchecked_mut(i) =
+            bytes.inner.get_unchecked(i) ^ mask.inner.get_unchecked(i % mask.len());
         i += 1;
     }
-
-    return bytes;
 }
