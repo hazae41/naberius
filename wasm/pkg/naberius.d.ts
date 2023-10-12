@@ -6,11 +6,6 @@
 */
 export function xor_mod(bytes: Memory, mask: Memory): void;
 /**
-* @param {Memory} bytes
-* @returns {Memory}
-*/
-export function unpack(bytes: Memory): Memory;
-/**
 * @param {Memory} bits
 * @returns {Memory}
 */
@@ -20,6 +15,11 @@ export function pack_right(bits: Memory): Memory;
 * @returns {Memory}
 */
 export function pack_left(bits: Memory): Memory;
+/**
+* @param {Memory} bytes
+* @returns {Memory}
+*/
+export function unpack(bytes: Memory): Memory;
 /**
 */
 export class Memory {
@@ -63,9 +63,9 @@ export interface InitOutput {
   readonly memory_ptr: (a: number) => number;
   readonly memory_len: (a: number) => number;
   readonly xor_mod: (a: number, b: number) => void;
-  readonly unpack: (a: number) => number;
   readonly pack_right: (a: number) => number;
   readonly pack_left: (a: number) => number;
+  readonly unpack: (a: number) => number;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
 }
 

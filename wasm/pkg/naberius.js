@@ -44,16 +44,6 @@ export function xor_mod(bytes, mask) {
 }
 
 /**
-* @param {Memory} bytes
-* @returns {Memory}
-*/
-export function unpack(bytes) {
-    _assertClass(bytes, Memory);
-    const ret = wasm.unpack(bytes.__wbg_ptr);
-    return Memory.__wrap(ret);
-}
-
-/**
 * @param {Memory} bits
 * @returns {Memory}
 */
@@ -70,6 +60,16 @@ export function pack_right(bits) {
 export function pack_left(bits) {
     _assertClass(bits, Memory);
     const ret = wasm.pack_left(bits.__wbg_ptr);
+    return Memory.__wrap(ret);
+}
+
+/**
+* @param {Memory} bytes
+* @returns {Memory}
+*/
+export function unpack(bytes) {
+    _assertClass(bytes, Memory);
+    const ret = wasm.unpack(bytes.__wbg_ptr);
     return Memory.__wrap(ret);
 }
 
