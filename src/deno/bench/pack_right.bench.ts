@@ -1,4 +1,6 @@
-import { initBundledOnce, pack_right, unpack } from "../mod.ts";
+import "npm:@hazae41/symbol-dispose-polyfill";
+
+import { Memory, initBundledOnce, pack_right, unpack } from "../mod.ts";
 
 await initBundledOnce()
 
@@ -7,14 +9,16 @@ const group = "pack_right"
 const packed = new Uint8Array(1025)
 crypto.getRandomValues(packed)
 
-const unpacked = unpack(packed).copyAndDispose().subarray(0, -4)
+const mpacked = new Memory(packed)
+const munpacked = unpack(mpacked)
+const unpacked = munpacked.bytes
 
 let unpackedString = ""
 
 unpacked.forEach(x => unpackedString += x.toString())
 
 Deno.bench("wasm", { group, baseline: true }, () => {
-  pack_right(unpacked).free()
+  pack_right(munpacked).free()
 })
 
 Deno.bench("js (array)", { group }, () => {
